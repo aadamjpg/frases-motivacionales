@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym Motivation - Gaming Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #050508;
+      --bg-card: rgba(15, 15, 25, 0.85);
+      --neon-green: #39ff14;
+      --neon-blue: #00d4ff;
+      --neon-purple: #b44aff;
+      --neon-red: #ff3e3e;
+      --neon-yellow: #ffe600;
+      --text-primary: #eaeaea;
+      --text-secondary: #7a7a9a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Animated grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPulse 4s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* Floating particles */
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-particle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(100vh) scale(0); }
+      10% { opacity: 1; }
+      90% { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+    }
+
+    /* Glow orbs */
+    .glow-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      animation: orbDrift 20s ease-in-out infinite;
+    }
+
+    .glow-orb:nth-child(1) {
+      width: 400px; height: 400px;
+      background: var(--neon-green);
+      top: -5%; left: -5%;
+      animation-delay: 0s;
+    }
+
+    .glow-orb:nth-child(2) {
+      width: 350px; height: 350px;
+      background: var(--neon-purple);
+      bottom: -10%; right: -5%;
+      animation-delay: -7s;
+    }
+
+    .glow-orb:nth-child(3) {
+      width: 300px; height: 300px;
+      background: var(--neon-blue);
+      top: 40%; left: 60%;
+      animation-delay: -14s;
+    }
+
+    @keyframes orbDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(60px, -40px) scale(1.15); }
+      66% { transform: translate(-30px, 50px) scale(0.85); }
+    }
+
+    /* Noise overlay */
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* Burst particles on click */
+    .burst-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .burst {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: burstOut 1s ease-out forwards;
+    }
+
+    @keyframes burstOut {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
+    }
+
+    /* Main container */
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 850px;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: glitchIn 1s ease-out 0.2s forwards;
+    }
+
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      position: relative;
+    }
+
+    .header .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .header .xp-bar {
+      width: 200px;
+      height: 3px;
+      margin: 0.8rem auto 0;
+      background: rgba(57, 255, 20, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .header .xp-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+      border-radius: 3px;
+      animation: xpFill 2s ease-out 1s forwards;
+    }
+
+    @keyframes xpFill {
+      to { width: 100%; }
+    }
+
+    @keyframes glitchIn {
+      0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+      50% { opacity: 0.8; transform: translateY(-3px) skewX(-2deg); filter: blur(2px); }
+      70% { transform: translateY(1px) skewX(1deg); }
+      100% { opacity: 1; transform: translateY(0) skewX(0); filter: blur(0); }
+    }
+
+    /* Category tabs */
+    .categories {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: glitchIn 0.8s ease-out 0.4s forwards;
+    }
+
+    .cat-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      background: rgba(57, 255, 20, 0.04);
+      border: 1px solid rgba(57, 255, 20, 0.12);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cat-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--neon-green);
+      transform: scaleX(0);
+      transition: transform 0.35s ease;
+    }
+
+    .cat-btn:hover {
+      border-color: rgba(57, 255, 20, 0.3);
+      color: var(--neon-green);
+    }
+
+    .cat-btn:hover::before { transform: scaleX(1); }
+
+    .cat-btn.active {
+      border-color: rgba(57, 255, 20, 0.4);
+      color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.08);
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.08);
+    }
+
+    .cat-btn.active::before { transform: scaleX(1); }
+
+    /* Game icon in category */
+    .cat-icon {
+      display: inline-block;
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    /* Quote card */
+    .quote-card {
+      position: relative;
+      padding: 2.5rem 2rem 3rem;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid rgba(57, 255, 20, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: glitchIn 0.8s ease-out 0.5s forwards;
+    }
+
+    .quote-card:hover {
+      border-color: rgba(57, 255, 20, 0.15);
+      box-shadow: 0 0 40px rgba(57, 255, 20, 0.04);
+    }
+
+    /* Scanline effect on card */
+    .quote-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(57, 255, 20, 0.008) 2px,
+        rgba(57, 255, 20, 0.008) 4px
+      );
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* Game reference badge */
+    .game-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 3px;
+      background: rgba(57, 255, 20, 0.08);
+      border: 1px solid rgba(57, 255, 20, 0.15);
+      color: var(--neon-green);
+      opacity: 0.7;
+      transition: opacity 0.3s ease, filter 0.5s ease;
+      filter: blur(0);
+      z-index: 5;
+    }
+
+    .game-badge.blur-out {
+      opacity: 0;
+      filter: blur(6px);
+    }
+
+    .game-badge.blur-in {
+      opacity: 0;
+      filter: blur(6px);
+    }
+
+    /* Workout type indicator */
+    .workout-type {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      color: var(--neon-blue);
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.12);
+      opacity: 0.7;
+      transition: opacity 0.3s ease, filter 0.5s ease;
+      filter: blur(0);
+      z-index: 5;
+    }
+
+    .workout-type.blur-out {
+      opacity: 0;
+      filter: blur(6px);
+    }
+
+    .workout-type.blur-in {
+      opacity: 0;
+      filter: blur(6px);
+    }
+
+    /* Quote text */
+    .quote-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.75rem);
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text-primary);
+      margin-bottom: 1.2rem;
+      max-width: 650px;
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+      transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease;
+      position: relative;
+      z-index: 3;
+    }
+
+    .quote-text.blur-out {
+      opacity: 0;
+      transform: translateY(-15px);
+      filter: blur(14px);
+    }
+
+    .quote-text.blur-in {
+      opacity: 0;
+      transform: translateY(15px);
+      filter: blur(14px);
+    }
+
+    /* Gym context */
+    .gym-context {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--neon-purple);
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+      font-style: italic;
+      transition: opacity 0.45s ease, filter 0.45s ease;
+      filter: blur(0);
+      position: relative;
+      z-index: 3;
+    }
+
+    .gym-context.blur-out {
+      opacity: 0;
+      filter: blur(8px);
+    }
+
+    .gym-context.blur-in {
+      opacity: 0;
+      filter: blur(8px);
+    }
+
+    /* Author / source */
+    .quote-source {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+      transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease;
+      transition-delay: 0.05s;
+      position: relative;
+      z-index: 3;
+    }
+
+    .quote-source.blur-out {
+      opacity: 0;
+      transform: translateY(-8px);
+      filter: blur(6px);
+    }
+
+    .quote-source.blur-in {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(6px);
+    }
+
+    .source-dash {
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--neon-green);
+      vertical-align: middle;
+      margin-right: 8px;
+      opacity: 0.5;
+    }
+
+    /* Share button */
+    .share-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s ease, color 0.3s ease;
+      padding: 5px 10px;
+      z-index: 5;
+    }
+
+    .quote-card:hover .share-btn { opacity: 0.5; }
+    .share-btn:hover { opacity: 1 !important; color: var(--neon-green); }
+
+    /* Generate button */
+    .btn-generate {
+      position: relative;
+      padding: 14px 36px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.05);
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      border-radius: 6px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      animation: glitchIn 0.8s ease-out 0.7s forwards;
+    }
+
+    .btn-generate::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(57, 255, 20, 0.08);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+
+    .btn-generate:hover {
+      border-color: rgba(57, 255, 20, 0.5);
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.1), inset 0 0 25px rgba(57, 255, 20, 0.03);
+    }
+
+    .btn-generate:hover::before {
+      width: 350px; height: 350px;
+    }
+
+    .btn-generate:active {
+      transform: scale(0.96);
+    }
+
+    .btn-generate span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: glitchIn 0.8s ease-out 0.9s forwards;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neon-green);
+    }
+
+    .stat-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Hint */
+    .hint {
+      margin-top: 1.2rem;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      opacity: 0;
+      animation: glitchIn 0.8s ease-out 1.1s forwards;
+      letter-spacing: 0.05em;
+    }
+
+    .hint kbd {
+      display: inline-block;
+      padding: 2px 8px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      border-radius: 3px;
+      background: rgba(57, 255, 20, 0.05);
+      color: var(--neon-green);
+      margin: 0 3px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(57, 255, 20, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--neon-green);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Achievement popup */
+    .achievement {
+      position: fixed;
+      top: 20px;
+      right: -350px;
+      width: 300px;
+      padding: 14px 18px;
+      background: rgba(15, 15, 25, 0.95);
+      border: 1px solid rgba(255, 230, 0, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 200;
+      transition: right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 30px rgba(255, 230, 0, 0.08);
+    }
+
+    .achievement.show { right: 20px; }
+
+    .achievement-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .achievement-text {
+      text-align: left;
+    }
+
+    .achievement-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neon-yellow);
+      margin-bottom: 2px;
+    }
+
+    .achievement-desc {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Ripple */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(57, 255, 20, 0.2);
+      transform: scale(0);
+      animation: rippleFx 0.7s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes rippleFx {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container { padding: 1.5rem; }
+      .quote-card { padding: 2rem 1.2rem 2.5rem; min-height: 200px; }
+      .stats-bar { gap: 1.2rem; }
+      .game-badge { font-size: 0.38rem; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.15); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="grid-bg"></div>
+  <div class="glow-orbs">
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+  </div>
+  <div class="bg-particles" id="bgParticles"></div>
+  <div class="noise"></div>
+  <div class="burst-container" id="burstContainer"></div>
+
+  <!-- Main -->
+  <div class="container">
+    <div class="header">
+      <h1>Gym Motivation</h1>
+      <p class="subtitle">Gaming Edition &bull; Calistenia &bull; Fuerza</p>
+      <div class="xp-bar"></div>
+    </div>
+
+    <div class="categories">
+      <button class="cat-btn active" data-cat="all"><span class="cat-icon">&#9889;</span>Todas</button>
+      <button class="cat-btn" data-cat="minecraft"><span class="cat-icon">&#9935;</span>Minecraft</button>
+      <button class="cat-btn" data-cat="darksouls"><span class="cat-icon">&#9876;</span>Dark Souls</button>
+      <button class="cat-btn" data-cat="godofwar"><span class="cat-icon">&#128296;</span>God of War</button>
+      <button class="cat-btn" data-cat="zelda"><span class="cat-icon">&#128737;</span>Zelda</button>
+      <button class="cat-btn" data-cat="otros"><span class="cat-icon">&#127918;</span>Otros</button>
+    </div>
+
+    <div class="quote-card" id="quoteCard">
+      <span class="workout-type" id="workoutType">Calistenia</span>
+      <span class="game-badge" id="gameBadge">MINECRAFT</span>
+      <p class="quote-text" id="quoteText">La noche es oscura y llena de mobs, pero tu sigues construyendo. Asi es cada serie de dominadas.</p>
+      <p class="gym-context" id="gymContext">Cuando el ultimo set parece imposible, recuerda: siempre hay un nuevo dia.</p>
+      <p class="quote-source" id="quoteSource"><span class="source-dash"></span>Referencia: Minecraft - Ciclo de supervivencia</p>
+      <button class="share-btn" id="shareBtn">Copiar</button>
+    </div>
+
+    <button class="btn-generate" id="generateBtn">
+      <span>&#9889; Nueva Frase</span>
+    </button>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value" id="statQuotes">1</div>
+        <div class="stat-label">Frases</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="statLevel">1</div>
+        <div class="stat-label">Nivel</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="statXP">0</div>
+        <div class="stat-label">XP</div>
+      </div>
+    </div>
+
+    <p class="hint">Presiona <kbd>SPACE</kbd> para una nueva frase</p>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">+10 XP &mdash; Frase copiada</div>
+
+  <!-- Achievement popup -->
+  <div class="achievement" id="achievement">
+    <div class="achievement-icon">&#127942;</div>
+    <div class="achievement-text">
+      <div class="achievement-title" id="achievementTitle">Logro desbloqueado</div>
+      <div class="achievement-desc" id="achievementDesc">Primer entrenamiento mental</div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // QUOTES DATABASE
+    // ==========================================
+    const quotes = [
+      // MINECRAFT
+      {
+        text: "\"La noche es oscura y llena de mobs, pero tu sigues construyendo.\" Asi es cada serie de dominadas: oscura, dura, pero al final, construyes algo increible.",
+        context: "Cuando sientes que no puedes mas en tu set, recuerda que cada repeticion es un bloque mas en tu cuerpo.",
+        source: "Minecraft - Ciclo de supervivencia nocturna",
+        game: "MINECRAFT",
+        workout: "Dominadas",
+        category: "minecraft"
+      },
+      {
+        text: "En Minecraft empiezas golpeando arboles con las manos. En calistenia empiezas sin poder hacer una flexion. Ambos terminan construyendo imperios.",
+        context: "El progreso en calistenia es como farmear: lento pero seguro. Cada dia eres mas fuerte.",
+        source: "Minecraft - Primeros momentos del juego",
+        game: "MINECRAFT",
+        workout: "Flexiones",
+        category: "minecraft"
+      },
+      {
+        text: "Nunca caves hacia abajo. En el gym, nunca sacrifiques la forma por las repeticiones. La tecnica es tu antorcha en la oscuridad.",
+        context: "Mala tecnica = caer en lava. Buena tecnica = diamantes seguros.",
+        source: "Minecraft - Regla #1 de mineria",
+        game: "MINECRAFT",
+        workout: "Tecnica",
+        category: "minecraft"
+      },
+      {
+        text: "El Ender Dragon no se derrota en un dia. Tu muscle-up tampoco. Pero cada intento te acerca mas al portal del End.",
+        context: "Los objetivos grandes en calistenia requieren meses de preparacion, igual que preparar la pelea final.",
+        source: "Minecraft - Batalla contra el Ender Dragon",
+        game: "MINECRAFT",
+        workout: "Muscle-up",
+        category: "minecraft"
+      },
+      {
+        text: "Craftear una mesa de trabajo requiere 4 tablas. Tu cuerpo requiere disciplina, nutricion, descanso y entrenamiento. Sin uno, no funciona nada.",
+        context: "Los 4 pilares del progreso fisico, como los 4 bloques de madera esenciales.",
+        source: "Minecraft - Sistema de crafteo",
+        game: "MINECRAFT",
+        workout: "General",
+        category: "minecraft"
+      },
+      {
+        text: "Un Creeper puede destruir horas de trabajo en un segundo. Una lesion tambien. Calienta siempre, protege lo que construiste.",
+        context: "El calentamiento es tu armadura de diamante contra las lesiones.",
+        source: "Minecraft - Explosion de Creeper",
+        game: "MINECRAFT",
+        workout: "Calentamiento",
+        category: "minecraft"
+      },
+      {
+        text: "En modo Hardcore no hay segunda vida. En el gym, tu cuerpo es tu unico mundo. Cuidalo como si no hubiera respawn.",
+        context: "Cada articulacion, cada musculo merece atencion y cuidado.",
+        source: "Minecraft - Modo Hardcore",
+        game: "MINECRAFT",
+        workout: "Cuidado corporal",
+        category: "minecraft"
+      },
+      {
+        text: "Enchanting requiere experiencia. Las habilidades avanzadas de calistenia tambien. No puedes hacer un front lever sin haber dominado el hollow body.",
+        context: "Sube de nivel antes de intentar los trucos avanzados.",
+        source: "Minecraft - Mesa de encantamientos",
+        game: "MINECRAFT",
+        workout: "Front Lever",
+        category: "minecraft"
+      },
+      {
+        text: "El diamante esta en la capa 12. Tu mejor version esta despues de las capas de dolor, sudor y consistencia.",
+        context: "Sigue cavando. El diamante siempre esta mas profundo de lo que crees.",
+        source: "Minecraft - Mineria de diamantes",
+        game: "MINECRAFT",
+        workout: "Persistencia",
+        category: "minecraft"
+      },
+      {
+        text: "Respawn y vuelve a intentarlo. Cada fallo en un handstand es un respawn. Vuelves, ajustas, y lo intentas de nuevo.",
+        context: "Morir en Minecraft no es el final. Fallar una repeticion tampoco.",
+        source: "Minecraft - Sistema de respawn",
+        game: "MINECRAFT",
+        workout: "Handstand",
+        category: "minecraft"
+      },
+
+      // DARK SOULS
+      {
+        text: "\"YOU DIED\" no es el final. Es el principio. Cada fallo en la barra es una leccion disfrazada de derrota.",
+        context: "Dark Souls te ensena que morir es aprender. Cada intento fallido en calistenia te hace mas sabio.",
+        source: "Dark Souls - Pantalla de Game Over",
+        game: "DARK SOULS",
+        workout: "Barra",
+        category: "darksouls"
+      },
+      {
+        text: "Praise the Sun. Celebra cada repeticion como si fuera una hoguera encontrada. Porque en este camino oscuro, cada victoria es sagrada.",
+        context: "Solaire de Astora te recuerda que hay belleza en el esfuerzo. Cada set completado es tu sol.",
+        source: "Dark Souls - Solaire de Astora",
+        game: "DARK SOULS",
+        workout: "General",
+        category: "darksouls"
+      },
+      {
+        text: "El boss mas dificil del gym eres tu mismo. Tu pereza, tus excusas, tu voz interior. Git gud y derrotalo.",
+        context: "No necesitas mejor equipo. Necesitas mejor mentalidad. Git gud.",
+        source: "Dark Souls - Filosofia del juego",
+        game: "DARK SOULS",
+        workout: "Mentalidad",
+        category: "darksouls"
+      },
+      {
+        text: "Cada hoguera es un checkpoint. Cada PR personal es tu hoguera. Descansa, pero nunca dejes de avanzar.",
+        context: "Los dias de descanso son tus hogueras. Necesarios para seguir la aventura.",
+        source: "Dark Souls - Sistema de hogueras",
+        game: "DARK SOULS",
+        workout: "Descanso",
+        category: "darksouls"
+      },
+      {
+        text: "Invoca ayuda cuando la necesites. Un spotter en el gym es tu summon. No hay debilidad en pedir ayuda.",
+        context: "Los summon signs existen por algo. Un companero de entrenamiento multiplica tu fuerza.",
+        source: "Dark Souls - Cooperativo online",
+        game: "DARK SOULS",
+        workout: "Companerismo",
+        category: "darksouls"
+      },
+      {
+        text: "La paciencia derrota cualquier jefe. Esperar el momento correcto para atacar. En calistenia: progresar gradualmente, sin prisa pero sin pausa.",
+        context: "Los que se apresuran contra un boss mueren. Los que se apresuran en el gym se lesionan.",
+        source: "Dark Souls - Mecanicas de combate",
+        game: "DARK SOULS",
+        workout: "Progresion",
+        category: "darksouls"
+      },
+      {
+        text: "No te pongas greeddy con los hits. No te pongas greedy con las repeticiones. La forma es tu escudo, la paciencia es tu espada.",
+        context: "Un golpe mas de la cuenta y estas muerto. Una rep mas con mala forma y estas lesionado.",
+        source: "Dark Souls - Ventanas de ataque",
+        game: "DARK SOULS",
+        workout: "Forma",
+        category: "darksouls"
+      },
+      {
+        text: "El hollow pierde su proposito. No te conviertas en un hollow del gym: entrena con intencion, con fuego, con alma.",
+        context: "Ir al gym sin plan es como vagar por Lordran sin direccion. Ten un objetivo.",
+        source: "Dark Souls - Lore de los Hollow",
+        game: "DARK SOULS",
+        workout: "Planificacion",
+        category: "darksouls"
+      },
+
+      // GOD OF WAR
+      {
+        text: "\"Boy, levanta tu escudo.\" Levanta tu core, activa tus gluteos, prepara tu postura. Kratos no entrena con excusas.",
+        context: "Kratos no acepta debilidad. Tu tampoco deberias en tus entrenamientos.",
+        source: "God of War (2018) - Kratos a Atreus",
+        game: "GOD OF WAR",
+        workout: "Core",
+        category: "godofwar"
+      },
+      {
+        text: "\"Debemos ser mejores.\" No compitas con los demas en el gym. Compite con quien eras ayer. Se mejor que tu version anterior.",
+        context: "Kratos busca romper el ciclo de violencia. Tu rompe el ciclo de mediocridad.",
+        source: "God of War (2018) - Kratos",
+        game: "GOD OF WAR",
+        workout: "Superacion",
+        category: "godofwar"
+      },
+      {
+        text: "Kratos cargo las Cadenas del Caos en sus brazos. Tu cargas tu propio peso. Ambos son armas letales cuando se dominan.",
+        context: "El peso corporal es tu arma en calistenia. Dominalo como Kratos domina sus cadenas.",
+        source: "God of War - Las Cadenas del Caos",
+        game: "GOD OF WAR",
+        workout: "Peso corporal",
+        category: "godofwar"
+      },
+      {
+        text: "\"La direccion en la que caminas importa mas que la velocidad.\" Progresar lento en calistenia con buena forma vale mas que apresurarte.",
+        context: "Mimir lo sabe. La consistencia a largo plazo derrota a la intensidad a corto plazo.",
+        source: "God of War - Mimir",
+        game: "GOD OF WAR",
+        workout: "Consistencia",
+        category: "godofwar"
+      },
+      {
+        text: "Kratos mato dioses. Tu puedes matar tu set de 50 burpees. La ira espartana vive en ti, usala como combustible.",
+        context: "Canaliza tu frustracion en energia. El gym es tu Olimpo para conquistar.",
+        source: "God of War - Saga completa",
+        game: "GOD OF WAR",
+        workout: "Burpees",
+        category: "godofwar"
+      },
+      {
+        text: "\"No seas disculpado por ser quien eres.\" Tu cuerpo es tuyo. Tu ritmo es tuyo. Tu progreso es tuyo. Sin comparaciones.",
+        context: "Cada guerrero tiene su propio camino. El tuyo en calistenia es unico.",
+        source: "God of War Ragnarok - Kratos",
+        game: "GOD OF WAR",
+        workout: "Autoestima",
+        category: "godofwar"
+      },
+      {
+        text: "Antes de levantar el hacha, Kratos respira. Antes de tu set mas pesado, respira. La respiracion es poder.",
+        context: "El control de la respiracion es la base de todo movimiento poderoso.",
+        source: "God of War (2018) - Mecanicas de combate",
+        game: "GOD OF WAR",
+        workout: "Respiracion",
+        category: "godofwar"
+      },
+
+      // ZELDA
+      {
+        text: "Link empieza cada aventura sin nada. Solo con coraje. Tu empiezas calistenia sin fuerza. Solo con voluntad. Eso es suficiente.",
+        context: "No necesitas equipo, ni gym. Solo tu cuerpo y la voluntad de empezar.",
+        source: "The Legend of Zelda - El despertar del heroe",
+        game: "ZELDA",
+        workout: "Inicio",
+        category: "zelda"
+      },
+      {
+        text: "Cada corazon extra que consigues en Zelda es como cada kilo que pierdes o cada rep extra que ganas. Progreso medible.",
+        context: "Los contenedores de corazon son tus PRs personales. Coleccionalos.",
+        source: "The Legend of Zelda - Sistema de vida",
+        game: "ZELDA",
+        workout: "Progreso",
+        category: "zelda"
+      },
+      {
+        text: "Link no habla. Actua. No hables de tus metas fitness. Actua. Los resultados hablan mas fuerte que las palabras.",
+        context: "El heroe silencioso que entrena sin hacer ruido pero los resultados gritan.",
+        source: "The Legend of Zelda - Link, el heroe silencioso",
+        game: "ZELDA",
+        workout: "Accion",
+        category: "zelda"
+      },
+      {
+        text: "En Breath of the Wild, la resistencia es limitada. Gestionala. En el gym, gestiona tu energia: no gastes todo en el primer set.",
+        context: "La barra de stamina te ensena a dosificar. Aplica lo mismo a tu entrenamiento.",
+        source: "Zelda: Breath of the Wild - Barra de stamina",
+        game: "ZELDA",
+        workout: "Energia",
+        category: "zelda"
+      },
+      {
+        text: "Las shrines son pequenos retos que te hacen mas fuerte. Cada ejercicio de calistenia es tu shrine personal. Resuelve 120.",
+        context: "No necesitas derrotar a Ganon hoy. Solo necesitas completar tu shrine de hoy.",
+        source: "Zelda: Breath of the Wild - Shrines",
+        game: "ZELDA",
+        workout: "Retos diarios",
+        category: "zelda"
+      },
+      {
+        text: "\"Es peligroso ir solo.\" Busca una comunidad de calistenia. Los companeros hacen el viaje mas llevadero y mas divertido.",
+        context: "El viejo de la cueva tenia razon. Un grupo de entrenamiento cambia todo.",
+        source: "The Legend of Zelda (1986) - Viejo de la cueva",
+        game: "ZELDA",
+        workout: "Comunidad",
+        category: "zelda"
+      },
+      {
+        text: "Link escala cualquier superficie en Breath of the Wild. Tu meta: escalar cualquier muro, cualquier cuerda, cualquier obstaculo con tu propio cuerpo.",
+        context: "La escalada en calistenia es libertad pura. Como explorar Hyrule sin limites.",
+        source: "Zelda: Breath of the Wild - Mecanica de escalada",
+        game: "ZELDA",
+        workout: "Escalada",
+        category: "zelda"
+      },
+
+      // OTROS JUEGOS
+      {
+        text: "\"War never changes.\" Pero tu si. Cada dia en el gym eres una version mejorada. La guerra contra la mediocridad la ganas con consistencia.",
+        context: "Fallout te ensena sobre supervivencia. El gym te ensena sobre transformacion.",
+        source: "Fallout - Frase iconica de la saga",
+        game: "FALLOUT",
+        workout: "Transformacion",
+        category: "otros"
+      },
+      {
+        text: "\"Would you kindly... hacer 10 repeticiones mas?\" El control mental existe. Entrenalo para que trabaje a tu favor, no en tu contra.",
+        context: "Tu mente puede ser tu mejor aliada o tu peor enemiga. Elige bien.",
+        source: "BioShock - Atlas / Frank Fontaine",
+        game: "BIOSHOCK",
+        workout: "Mental",
+        category: "otros"
+      },
+      {
+        text: "En Tetris, las piezas caen cada vez mas rapido. En el gym, los pesos se sienten cada vez mas ligeros. Eso es adaptacion. Eso es progreso.",
+        context: "Tu cuerpo se adapta al estimulo. Aumenta la dificultad para seguir creciendo.",
+        source: "Tetris - Mecanica de dificultad progresiva",
+        game: "TETRIS",
+        workout: "Progresion",
+        category: "otros"
+      },
+      {
+        text: "\"The cake is a lie.\" Los atajos en el fitness tambien. No hay pastillas magicas, no hay trucos. Solo trabajo duro y constancia.",
+        context: "GLaDOS miente. Los vendedores de suplementos milagro tambien. El unico camino es el esfuerzo.",
+        source: "Portal - Graffiti en las paredes",
+        game: "PORTAL",
+        workout: "Realidad",
+        category: "otros"
+      },
+      {
+        text: "Mario se cae a un pit y vuelve a empezar. Tu fallas una plancha y vuelves a empezar. El juego nunca termina si tu no lo apagas.",
+        context: "Las vidas infinitas del progreso. Siempre puedes volver a intentarlo.",
+        source: "Super Mario Bros - Mecanica de vidas",
+        game: "MARIO",
+        workout: "Plancha",
+        category: "otros"
+      },
+      {
+        text: "Doom Slayer no descansa. No negocia. Entra y destruye. Esa mentalidad en tu entrenamiento de HIIT: sin piedad, sin pausa.",
+        context: "RIP AND TEAR... tus limites. Cada sesion HIIT es un nivel de DOOM.",
+        source: "DOOM - Doom Slayer",
+        game: "DOOM",
+        workout: "HIIT",
+        category: "otros"
+      },
+      {
+        text: "En Pokemon, evolucionas cuando acumulas suficiente experiencia. En calistenia, evolucionas de flexion a planche con suficiente practica.",
+        context: "Charmander no se convierte en Charizard de un dia para otro. Tu tampoco.",
+        source: "Pokemon - Sistema de evolucion",
+        game: "POKEMON",
+        workout: "Planche",
+        category: "otros"
+      },
+      {
+        text: "\"Stay a while and listen.\" Escucha a tu cuerpo. El dolor bueno es DOMS. El dolor malo es lesion. Aprende la diferencia.",
+        context: "Deckard Cain sabe escuchar. Tu cuerpo te habla, aprende su idioma.",
+        source: "Diablo II - Deckard Cain",
+        game: "DIABLO",
+        workout: "Recuperacion",
+        category: "otros"
+      },
+      {
+        text: "En Skyrim puedes ser lo que quieras. En calistenia tambien: fuerte, flexible, agil, explosivo. Tu elijes tu build.",
+        context: "No hay una sola forma de entrenar. Crea tu propio personaje fitness.",
+        source: "The Elder Scrolls V: Skyrim - Libertad de roles",
+        game: "SKYRIM",
+        workout: "Versatilidad",
+        category: "otros"
+      },
+      {
+        text: "\"I used to be an adventurer like you, then I took an arrow in the knee.\" Cuida tus rodillas. Haz sentadillas con buena forma. Siempre.",
+        context: "Las rodillas son sagradas en calistenia. Protegelas con tecnica correcta.",
+        source: "Skyrim - Guardias de Whiterun",
+        game: "SKYRIM",
+        workout: "Sentadillas",
+        category: "otros"
+      },
+    ];
+
+    // STATE
+    let currentCat = 'all';
+    let quoteCount = 0;
+    let xp = 0;
+    let level = 1;
+    let isAnimating = false;
+    let lastIdx = -1;
+    const achievements = [
+      { at: 5, title: "Primer calabozo", desc: "5 frases desbloqueadas" },
+      { at: 10, title: "Guerrero de hierro", desc: "10 frases. Nivel intermedio." },
+      { at: 25, title: "Jefe derrotado", desc: "25 frases. Eres imparable." },
+      { at: 50, title: "Leyenda del gym", desc: "50 frases. Modo bestia." },
+    ];
+    let unlockedAch = new Set();
+
+    // DOM
+    const quoteText = document.getElementById('quoteText');
+    const gymContext = document.getElementById('gymContext');
+    const quoteSource = document.getElementById('quoteSource');
+    const gameBadge = document.getElementById('gameBadge');
+    const workoutType = document.getElementById('workoutType');
+    const generateBtn = document.getElementById('generateBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const toast = document.getElementById('toast');
+    const achievement = document.getElementById('achievement');
+    const achievementTitle = document.getElementById('achievementTitle');
+    const achievementDesc = document.getElementById('achievementDesc');
+    const statQuotes = document.getElementById('statQuotes');
+    const statLevel = document.getElementById('statLevel');
+    const statXP = document.getElementById('statXP');
+    const burstContainer = document.getElementById('burstContainer');
+    const catBtns = document.querySelectorAll('.cat-btn');
+
+    // Create floating background particles
+    function initBgParticles() {
+      const container = document.getElementById('bgParticles');
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'bg-particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = (2 + Math.random() * 4) + 'px';
+        p.style.height = p.style.width;
+        p.style.background = [
+          'rgba(57,255,20,0.4)',
+          'rgba(0,212,255,0.4)',
+          'rgba(180,74,255,0.3)'
+        ][Math.floor(Math.random() * 3)];
+        p.style.animationDuration = (8 + Math.random() * 15) + 's';
+        p.style.animationDelay = (Math.random() * 15) + 's';
+        container.appendChild(p);
+      }
+    }
+    initBgParticles();
+
+    // Get filtered
+    function getFiltered() {
+      if (currentCat === 'all') return quotes;
+      return quotes.filter(q => q.category === currentCat);
+    }
+
+    // Generate
+    function generateQuote() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const filtered = getFiltered();
+      if (!filtered.length) return;
+
+      let idx;
+      do { idx = Math.floor(Math.random() * filtered.length); }
+      while (idx === lastIdx && filtered.length > 1);
+      lastIdx = idx;
+
+      const q = filtered[idx];
+      quoteCount++;
+      xp += 10;
+      level = Math.floor(xp / 50) + 1;
+
+      // Blur out
+      quoteText.classList.add('blur-out');
+      gymContext.classList.add('blur-out');
+      quoteSource.classList.add('blur-out');
+      gameBadge.classList.add('blur-out');
+      workoutType.classList.add('blur-out');
+
+      createBurst();
+
+      setTimeout(() => {
+        quoteText.textContent = q.text;
+        gymContext.textContent = q.context;
+        quoteSource.innerHTML = '<span class="source-dash"></span>' + q.source;
+        gameBadge.textContent = q.game;
+        workoutType.textContent = q.workout;
+
+        // Set badge color by game
+        const colors = {
+          'minecraft': '--neon-green',
+          'darksouls': '--neon-red',
+          'godofwar': '--neon-red',
+          'zelda': '--neon-blue',
+          'otros': '--neon-purple'
+        };
+        const col = colors[q.category] || '--neon-green';
+        gameBadge.style.color = `var(${col})`;
+        gameBadge.style.borderColor = `var(${col})`;
+        gameBadge.style.background = `rgba(${col === '--neon-green' ? '57,255,20' : col === '--neon-red' ? '255,62,62' : col === '--neon-blue' ? '0,212,255' : '180,74,255'}, 0.08)`;
+
+        // Remove blur-out, add blur-in
+        [quoteText, gymContext, quoteSource, gameBadge, workoutType].forEach(el => {
+          el.classList.remove('blur-out');
+          el.classList.add('blur-in');
+        });
+
+        // Update stats
+        statQuotes.textContent = quoteCount;
+        statLevel.textContent = level;
+        statXP.textContent = xp;
+
+        // Check achievements
+        checkAchievements();
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            [quoteText, gymContext, quoteSource, gameBadge, workoutType].forEach(el => {
+              el.classList.remove('blur-in');
+            });
+            isAnimating = false;
+          });
+        });
+      }, 450);
+    }
+
+    // Burst particles
+    function createBurst() {
+      const card = document.getElementById('quoteCard');
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 12; i++) {
+        const b = document.createElement('div');
+        b.className = 'burst';
+        const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.4 - 0.2);
+        const dist = 50 + Math.random() * 120;
+        b.style.left = cx + 'px';
+        b.style.top = cy + 'px';
+        b.style.setProperty('--bx', Math.cos(angle) * dist + 'px');
+        b.style.setProperty('--by', Math.sin(angle) * dist + 'px');
+        b.style.width = (2 + Math.random() * 4) + 'px';
+        b.style.height = b.style.width;
+        b.style.background = ['var(--neon-green)', 'var(--neon-blue)', 'var(--neon-purple)'][Math.floor(Math.random() * 3)];
+        burstContainer.appendChild(b);
+        setTimeout(() => b.remove(), 1000);
+      }
+    }
+
+    // Achievements
+    function checkAchievements() {
+      for (const a of achievements) {
+        if (quoteCount >= a.at && !unlockedAch.has(a.at)) {
+          unlockedAch.add(a.at);
+          showAchievement(a.title, a.desc);
+          break;
+        }
+      }
+    }
+
+    function showAchievement(title, desc) {
+      achievementTitle.textContent = title;
+      achievementDesc.textContent = desc;
+      achievement.classList.add('show');
+      setTimeout(() => achievement.classList.remove('show'), 3500);
+    }
+
+    // Copy
+    function copyQuote() {
+      const txt = quoteText.textContent + '\n\n' + gymContext.textContent + '\n\n- ' + quoteSource.textContent.trim();
+      navigator.clipboard.writeText(txt).then(() => {
+        xp += 10;
+        statXP.textContent = xp;
+        level = Math.floor(xp / 50) + 1;
+        statLevel.textContent = level;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    // Ripple
+    function createRipple(e) {
+      const btn = e.currentTarget;
+      const rect = btn.getBoundingClientRect();
+      const r = document.createElement('span');
+      r.className = 'ripple';
+      r.style.left = (e.clientX - rect.left) + 'px';
+      r.style.top = (e.clientY - rect.top) + 'px';
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    }
+
+    // Events
+    generateBtn.addEventListener('click', (e) => {
+      createRipple(e);
+      generateQuote();
+    });
+
+    shareBtn.addEventListener('click', copyQuote);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        generateQuote();
+      }
+    });
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat;
+        lastIdx = -1;
+        generateQuote();
+      });
+    });
+
+    // Parallax on card
+    document.addEventListener('mousemove', (e) => {
+      const card = document.getElementById('quoteCard');
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / 50;
+      const dy = (e.clientY - cy) / 50;
+      card.style.transform = `perspective(1000px) rotateY(${dx * 0.3}deg) rotateX(${-dy * 0.3}deg)`;
+    });
+  </script>
+</body>
+</html>
