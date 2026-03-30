@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft &bull; Filosofia del Vacio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0b0c0f;
+      --bg-card: rgba(12, 14, 18, 0.9);
+      --green-dark: #1a3a1a;
+      --green-muted: #3d6b3d;
+      --green-glow: #4a8c4a;
+      --green-bright: #5cb85c;
+      --brown: #6b5338;
+      --brown-light: #8b7355;
+      --stone: #7a7a7a;
+      --text: #c8c8c0;
+      --text-dim: #6a6a65;
+      --text-faint: #3d3d3a;
+      --rain: rgba(140, 160, 180, 0.08);
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* === RAIN EFFECT === */
+    .rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .raindrop {
+      position: absolute;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(140, 170, 200, 0.15), transparent);
+      animation: fall linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10vh); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
+
+    /* === FOG LAYERS === */
+    .fog {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .fog-layer {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(20, 25, 20, 0.3) 20%,
+        rgba(15, 20, 15, 0.15) 40%,
+        transparent 60%,
+        rgba(20, 25, 20, 0.25) 80%,
+        transparent 100%
+      );
+      animation: fogDrift linear infinite;
+    }
+
+    .fog-layer:nth-child(1) {
+      top: 10%;
+      animation-duration: 60s;
+      opacity: 0.6;
+      filter: blur(30px);
+    }
+
+    .fog-layer:nth-child(2) {
+      top: 50%;
+      animation-duration: 45s;
+      animation-delay: -15s;
+      opacity: 0.4;
+      filter: blur(50px);
+    }
+
+    .fog-layer:nth-child(3) {
+      bottom: 0;
+      animation-duration: 55s;
+      animation-delay: -30s;
+      opacity: 0.5;
+      filter: blur(40px);
+    }
+
+    @keyframes fogDrift {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+
+    /* === PIXEL PARTICLES (floating like Minecraft particles) === */
+    .pixel-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .pixel {
+      position: absolute;
+      background: var(--green-muted);
+      opacity: 0;
+      animation: pixelFloat linear infinite;
+    }
+
+    @keyframes pixelFloat {
+      0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+      15% { opacity: 0.3; }
+      85% { opacity: 0.1; }
+      100% { opacity: 0; transform: translateY(-200px) rotate(180deg); }
+    }
+
+    /* === NOISE === */
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* === VIGNETTE === */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+    }
+
+    /* === MAIN CONTAINER === */
+    .container {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      max-width: 750px;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    /* === HEADER === */
+    .header {
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeIn 2s ease-out 0.5s forwards;
+    }
+
+    .mc-icon {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: var(--green-dark);
+      border: 2px solid var(--green-muted);
+      margin-bottom: 1rem;
+      position: relative;
+      image-rendering: pixelated;
+    }
+
+    .mc-icon::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: var(--green-muted);
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .header h1 span {
+      display: block;
+      font-size: 0.4em;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .header-line {
+      width: 80px;
+      height: 1px;
+      margin: 1rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--green-muted), transparent);
+      opacity: 0.5;
+    }
+
+    /* === CATEGORY TABS === */
+    .categories {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-out 0.8s forwards;
+    }
+
+    .cat-pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      padding: 5px 12px;
+      background: transparent;
+      border: 1px solid var(--text-faint);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.5s ease;
+    }
+
+    .cat-pill:hover {
+      border-color: var(--green-muted);
+      color: var(--text);
+    }
+
+    .cat-pill.active {
+      border-color: var(--green-muted);
+      color: var(--green-glow);
+      background: rgba(74, 140, 74, 0.05);
+    }
+
+    /* === QUOTE CARD === */
+    .quote-card {
+      position: relative;
+      padding: 3rem 2.5rem;
+      margin-bottom: 2rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(61, 107, 61, 0.08);
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-out 1s forwards;
+      transition: border-color 0.8s ease;
+    }
+
+    .quote-card:hover {
+      border-color: rgba(61, 107, 61, 0.15);
+    }
+
+    /* Pixelated corners */
+    .corner {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-color: var(--green-muted);
+      opacity: 0.25;
+    }
+
+    .corner-tl { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
+    .corner-tr { top: -1px; right: -1px; border-top: 1px solid; border-right: 1px solid; }
+    .corner-bl { bottom: -1px; left: -1px; border-bottom: 1px solid; border-left: 1px solid; }
+    .corner-br { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
+
+    /* Context label */
+    .context-label {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: var(--text-faint);
+      opacity: 1;
+      transition: opacity 0.5s ease, filter 0.5s ease;
+      filter: blur(0);
+    }
+
+    .context-label.blur-out { opacity: 0; filter: blur(6px); }
+    .context-label.blur-in { opacity: 0; filter: blur(6px); }
+
+    /* Day counter */
+    .day-counter {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--text-faint);
+      opacity: 1;
+      transition: opacity 0.5s ease, filter 0.5s ease;
+      filter: blur(0);
+    }
+
+    .day-counter.blur-out { opacity: 0; filter: blur(6px); }
+    .day-counter.blur-in { opacity: 0; filter: blur(6px); }
+
+    /* Quote text */
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 2.8vw, 1.65rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+      transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+    }
+
+    .quote-text.blur-out {
+      opacity: 0;
+      transform: translateY(-12px);
+      filter: blur(16px);
+    }
+
+    .quote-text.blur-in {
+      opacity: 0;
+      transform: translateY(12px);
+      filter: blur(16px);
+    }
+
+    /* Reflection (philosophical gym context) */
+    .reflection {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 500px;
+      margin-bottom: 1.2rem;
+      opacity: 1;
+      filter: blur(0);
+      transition: opacity 0.6s ease, filter 0.6s ease;
+      transition-delay: 0.05s;
+    }
+
+    .reflection.blur-out { opacity: 0; filter: blur(10px); }
+    .reflection.blur-in { opacity: 0; filter: blur(10px); }
+
+    /* Source */
+    .source {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      color: var(--text-faint);
+      opacity: 1;
+      filter: blur(0);
+      transition: opacity 0.6s ease, filter 0.6s ease;
+      transition-delay: 0.1s;
+    }
+
+    .source.blur-out { opacity: 0; filter: blur(6px); }
+    .source.blur-in { opacity: 0; filter: blur(6px); }
+
+    .source-line {
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--green-muted);
+      vertical-align: middle;
+      margin-right: 8px;
+      opacity: 0.3;
+    }
+
+    /* Copy button */
+    .copy-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: var(--text-faint);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.4s ease, color 0.3s ease;
+      padding: 5px 8px;
+    }
+
+    .quote-card:hover .copy-btn { opacity: 0.6; }
+    .copy-btn:hover { opacity: 1 !important; color: var(--green-glow); }
+
+    /* === BUTTON === */
+    .btn-next {
+      position: relative;
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: lowercase;
+      color: var(--text-dim);
+      background: transparent;
+      border: 1px solid var(--text-faint);
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.6s ease;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-out 1.2s forwards;
+    }
+
+    .btn-next:hover {
+      border-color: var(--green-muted);
+      color: var(--text);
+    }
+
+    .btn-next:active {
+      transform: scale(0.97);
+    }
+
+    .btn-next span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === BOTTOM INFO === */
+    .bottom-info {
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-out 1.5s forwards;
+    }
+
+    .day-night {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.6rem;
+    }
+
+    .dn-block {
+      width: 6px;
+      height: 6px;
+      border: 1px solid var(--text-faint);
+      transition: all 0.5s ease;
+    }
+
+    .dn-block.filled {
+      background: var(--green-muted);
+      border-color: var(--green-muted);
+    }
+
+    .counter-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-faint);
+      letter-spacing: 0.08em;
+      margin-top: 0.3rem;
+    }
+
+    .hint {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-faint);
+      letter-spacing: 0.05em;
+      margin-top: 0.6rem;
+      opacity: 0.5;
+    }
+
+    .hint kbd {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid var(--text-faint);
+      font-size: 0.5rem;
+      margin: 0 2px;
+    }
+
+    /* === TOAST === */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(15px);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--green-glow);
+      background: rgba(12, 14, 18, 0.95);
+      border: 1px solid rgba(74, 140, 74, 0.15);
+      padding: 8px 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 600px) {
+      .container { padding: 1.5rem; }
+      .quote-card { padding: 2.5rem 1.5rem; min-height: 240px; }
+    }
+
+    /* === SCROLLBAR === */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(61, 107, 61, 0.15); }
+  </style>
+</head>
+<body>
+
+  <!-- Atmosphere -->
+  <div class="rain" id="rain"></div>
+  <div class="fog">
+    <div class="fog-layer"></div>
+    <div class="fog-layer"></div>
+    <div class="fog-layer"></div>
+  </div>
+  <div class="pixel-particles" id="pixels"></div>
+  <div class="noise"></div>
+  <div class="vignette"></div>
+
+  <!-- Content -->
+  <div class="container">
+    <div class="header">
+      <div class="mc-icon"></div>
+      <h1>Filosofia del Vacio<span>reflexiones desde un mundo de bloques</span></h1>
+      <div class="header-line"></div>
+    </div>
+
+    <div class="categories">
+      <button class="cat-pill active" data-cat="all">todas</button>
+      <button class="cat-pill" data-cat="soledad">soledad</button>
+      <button class="cat-pill" data-cat="persistencia">persistencia</button>
+      <button class="cat-pill" data-cat="perdida">perdida</button>
+      <button class="cat-pill" data-cat="proposito">proposito</button>
+      <button class="cat-pill" data-cat="tiempo">tiempo</button>
+    </div>
+
+    <div class="quote-card" id="quoteCard">
+      <span class="corner corner-tl"></span>
+      <span class="corner corner-tr"></span>
+      <span class="corner corner-bl"></span>
+      <span class="corner corner-br"></span>
+      <span class="context-label" id="contextLabel">soledad &mdash; noche 1</span>
+      <span class="day-counter" id="dayCounter">dia 1</span>
+
+      <p class="quote-text" id="quoteText">La primera noche siempre es la mas larga. No porque los mobs sean peligrosos, sino porque estas completamente solo con tus pensamientos y un refugio de tierra.</p>
+      <p class="reflection" id="reflection">A veces la vida se siente asi: cavar un hueco, esconderte, y esperar a que la oscuridad pase. Pero siempre amanece.</p>
+      <p class="source" id="source"><span class="source-line"></span>minecraft &mdash; primera noche de supervivencia</p>
+
+      <button class="copy-btn" id="copyBtn">copiar</button>
+    </div>
+
+    <button class="btn-next" id="nextBtn">
+      <span>siguiente reflexion</span>
+    </button>
+
+    <div class="bottom-info">
+      <div class="day-night" id="dayNight">
+        <div class="dn-block filled"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+        <div class="dn-block"></div>
+      </div>
+      <p class="counter-text" id="counterText">reflexion 1</p>
+      <p class="hint">presiona <kbd>espacio</kbd> para continuar</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">guardado en el inventario</div>
+
+  <script>
+    // =============================================
+    // MINECRAFT PHILOSOPHICAL QUOTES DATABASE
+    // =============================================
+    const quotes = [
+      // SOLEDAD
+      {
+        text: "La primera noche siempre es la mas larga. No porque los mobs sean peligrosos, sino porque estas completamente solo con tus pensamientos y un refugio de tierra.",
+        reflection: "A veces la vida se siente asi: cavar un hueco, esconderte, y esperar a que la oscuridad pase. Pero siempre amanece.",
+        source: "minecraft — primera noche de supervivencia",
+        label: "soledad — noche 1",
+        category: "soledad"
+      },
+      {
+        text: "Puedes construir la casa mas grande del mundo, con diamantes y encantamientos en cada esquina. Pero si nadie la visita, solo es un monumento a la soledad.",
+        reflection: "Las cosas materiales no llenan el vacio que deja la ausencia de alguien. Construimos para sentirnos vivos, pero vivir es compartir.",
+        source: "minecraft — construir en singleplayer",
+        label: "soledad — mundo vacio",
+        category: "soledad"
+      },
+      {
+        text: "El End es el lugar mas solitario que existe. Un vacio infinito de islas flotantes donde el unico sonido son tus propios pasos. Y sin embargo, ahi estan los tesoros mas valiosos.",
+        reflection: "Los momentos de mayor soledad son donde encontramos lo mas valioso de nosotros mismos. En el silencio, descubrimos quien somos realmente.",
+        source: "minecraft — la dimension del end",
+        label: "soledad — el vacio",
+        category: "soledad"
+      },
+      {
+        text: "Los aldeanos nunca te miran a los ojos. Comercian contigo, si. Pero nunca te preguntan como estas. Es posible estar rodeado de vida y seguir completamente solo.",
+        reflection: "No toda compania es conexion. A veces las interacciones mas vacias son las que ocurren con gente que nos rodea pero no nos ve.",
+        source: "minecraft — aldeas y aldeanos",
+        label: "soledad — compania vacia",
+        category: "soledad"
+      },
+      {
+        text: "Hay un lobo que te sigue porque le diste un hueso. No te entiende, no sabe lo que sientes. Pero se sienta a tu lado en las noches oscuras. A veces eso es suficiente.",
+        reflection: "La compania no necesita palabras. A veces solo necesitamos saber que alguien eligio quedarse.",
+        source: "minecraft — domesticar lobos",
+        label: "soledad — compania silenciosa",
+        category: "soledad"
+      },
+      {
+        text: "En un servidor abandonado, los chunks siguen cargando. Las antorchas siguen brillando en tuneles que nadie recorre. La existencia continua sin testigos.",
+        reflection: "Hay algo profundamente triste en las cosas que persisten sin que nadie las observe. Como los recuerdos que solo tu guardas.",
+        source: "minecraft — servidores abandonados",
+        label: "soledad — persistencia sin testigos",
+        category: "soledad"
+      },
+
+      // PERSISTENCIA
+      {
+        text: "Minar diamantes es horas de oscuridad, picos rotos y lava esperando tragarte. La mayoria abandona. Los que persisten encuentran el azul entre la piedra gris.",
+        reflection: "Los mejores momentos de la vida no se encuentran en la superficie. Hay que cavar profundo, romper herramientas, y arriesgar caer en lava.",
+        source: "minecraft — mineria de diamantes, capa 12",
+        label: "persistencia — cavar profundo",
+        category: "persistencia"
+      },
+      {
+        text: "Cada pico de piedra que se rompe es un recordatorio: las herramientas se gastan, pero tu no. Tu eres el que sigue craftando, el que sigue cavando.",
+        reflection: "Las circunstancias se desgastan. Los recursos se agotan. Pero la voluntad de seguir se renueva cada vez que decides no rendirte.",
+        source: "minecraft — durabilidad de herramientas",
+        label: "persistencia — herramientas rotas",
+        category: "persistencia"
+      },
+      {
+        text: "\"Never dig straight down.\" Pero a veces, la unica forma de encontrar lo que buscas es ir hacia abajo, sabiendo que podrias caer. El miedo no mina diamantes.",
+        reflection: "Las reglas te protegen, pero tambien te limitan. A veces progresar significa arriesgar la caida.",
+        source: "minecraft — regla numero uno",
+        label: "persistencia — romper reglas",
+        category: "persistencia"
+      },
+      {
+        text: "El Ender Dragon tiene barras de vida que se regeneran. Tienes que destruir los cristales primero, uno por uno. No hay atajos contra los problemas grandes.",
+        reflection: "Los problemas gigantes no se resuelven de un golpe. Se desmontan pieza por pieza, con paciencia, incluso cuando parece que no avanzas.",
+        source: "minecraft — pelea contra el ender dragon",
+        label: "persistencia — un cristal a la vez",
+        category: "persistencia"
+      },
+      {
+        text: "Un Creeper destruye en un segundo lo que construiste en horas. Y te quedas mirando el crater. Y luego recoges los bloques que quedaron. Y empiezas de nuevo.",
+        reflection: "La vida te va a destruir cosas. Cosas que amabas, cosas que te costaron todo. Pero los escombros tambien son material de construccion.",
+        source: "minecraft — explosiones de creeper",
+        label: "persistencia — reconstruir",
+        category: "persistencia"
+      },
+      {
+        text: "En modo Hardcore no hay segunda oportunidad. Un error y pierdes todo. Pero los que eligen jugar asi descubren que cada segundo tiene un peso que nunca tuvieron antes.",
+        reflection: "Cuando sabes que no puedes repetir, cada momento se vuelve sagrado. Cada decision importa. Cada paso es arte.",
+        source: "minecraft — modo hardcore",
+        label: "persistencia — sin respawn",
+        category: "persistencia"
+      },
+
+      // PERDIDA
+      {
+        text: "Moriste en lava. Tus diamantes, tu armadura, el mapa que hiciste a mano. Todo se fue en tres segundos. El inventario esta vacio. Tu sigues aqui.",
+        reflection: "Perder cosas duele. Pero mientras estes aqui, puedes volver a encontrar. Lo que te define no es tu inventario, es que sigues jugando.",
+        source: "minecraft — morir en lava con inventario lleno",
+        label: "perdida — inventario vacio",
+        category: "perdida"
+      },
+      {
+        text: "El mundo de tu amigo ya no existe. El servidor cerro hace anos. Esas construcciones, esas aventuras, esos mensajes en carteles... solo viven en tu memoria.",
+        reflection: "Hay mundos enteros que solo existen en el recuerdo de quienes los vivieron. Y eso no los hace menos reales. Los hace eternos.",
+        source: "minecraft — servidores cerrados",
+        label: "perdida — mundos borrados",
+        category: "perdida"
+      },
+      {
+        text: "Tu perro murio protegiendote de un esqueleto. No sabias que iba a saltar. No pudiste evitarlo. Se sento a tu lado mil noches y en un segundo se fue.",
+        reflection: "Lo que mas duele de perder a alguien es lo ordinario que era su presencia. No valoramos lo constante hasta que desaparece.",
+        source: "minecraft — muerte de mascotas",
+        label: "perdida — lealtad",
+        category: "perdida"
+      },
+      {
+        text: "Entraste al Nether y tu portal se apago. Estas atrapado en un infierno rojo sin forma de volver a casa. Todo lo que construiste esta al otro lado.",
+        reflection: "A veces la vida te atrapa en un lugar del que no sabes salir. Pero siempre hay obsidiana en algun lugar. Siempre hay un camino de vuelta.",
+        source: "minecraft — portales rotos del nether",
+        label: "perdida — lejos de casa",
+        category: "perdida"
+      },
+      {
+        text: "Corrupted world. Unable to load. Tus mil horas, tus construcciones, tu historia. Un error de archivo y todo desaparece como si nunca hubiera existido.",
+        reflection: "La impermanencia es la unica constante. Nada dura para siempre. Pero el acto de crear, de intentar, de amar... eso si tiene sentido.",
+        source: "minecraft — mundo corrupto",
+        label: "perdida — impermanencia",
+        category: "perdida"
+      },
+      {
+        text: "Pusiste tu cama junto a la de tu amigo. Ahora juegas solo. La cama sigue ahi, a la derecha, vacia. No la mueves porque mover la cama seria aceptar que se fue.",
+        reflection: "Nos aferramos a los simbolos de lo que tuvimos. Una silla vacia, un nombre en la lista de amigos gris. Soltar es lo mas dificil que existe.",
+        source: "minecraft — multijugador a singleplayer",
+        label: "perdida — la cama vacia",
+        category: "perdida"
+      },
+
+      // PROPOSITO
+      {
+        text: "En Minecraft no hay mision. No hay quest log. No hay NPC que te diga que hacer. Y sin embargo, construyes. Porque crear es la respuesta cuando no hay pregunta.",
+        reflection: "La vida no viene con instrucciones. El proposito no te lo dan. Lo construyes, bloque a bloque, decision a decision.",
+        source: "minecraft — ausencia de objetivo definido",
+        label: "proposito — sin mision",
+        category: "proposito"
+      },
+      {
+        text: "Despues de matar al Ender Dragon, el juego no termina. Te devuelve al mundo. Y te preguntas: ahora que? La respuesta siempre ha sido la misma: lo que tu quieras.",
+        reflection: "Los grandes logros no son el final. Son un punto de partida. La pregunta 'y ahora que' es la mas libre y la mas aterradora que existe.",
+        source: "minecraft — post-ender dragon",
+        label: "proposito — despues del final",
+        category: "proposito"
+      },
+      {
+        text: "El poema del End habla de dos voces que discuten sobre ti, el jugador. Dicen que eres un soñador aprendiendo a despertar. Que el universo se dijo a si mismo: 'Te amo.'",
+        reflection: "En el fondo de todo el codigo, de todos los bloques, hay un mensaje: que la existencia te celebra. Que mereces estar aqui.",
+        source: "minecraft — el poema del end (creditos finales)",
+        label: "proposito — el poema",
+        category: "proposito"
+      },
+      {
+        text: "Pones una antorcha en una cueva profunda. Solo una. Pero esa antorcha convierte la oscuridad total en un lugar donde puedes estar. Un solo bloque de luz basta.",
+        reflection: "No necesitas iluminar el mundo entero. A veces basta con iluminar tu rincón. Una antorcha en la oscuridad ya es suficiente acto de rebeldia.",
+        source: "minecraft — antorchas en la oscuridad",
+        label: "proposito — una luz basta",
+        category: "proposito"
+      },
+      {
+        text: "Los carteles de Minecraft no sirven para nada mecanico. Pero la gente escribe en ellos. Nombres, fechas, chistes, despedidas. Porque necesitamos dejar marca.",
+        reflection: "El ser humano necesita decir 'yo estuve aqui'. Eso es el arte. Eso es la memoria. Eso es la razon por la que escribimos en las paredes.",
+        source: "minecraft — carteles de madera",
+        label: "proposito — dejar marca",
+        category: "proposito"
+      },
+
+      // TIEMPO
+      {
+        text: "Un dia en Minecraft dura 20 minutos. El sol sale, el sol se pone. Los dias pasan tan rapido que no los notas hasta que llevas mil y no recuerdas cuando empezo.",
+        reflection: "El tiempo pasa mas rapido de lo que crees. Los dias se acumulan en silencio. Mira alrededor antes de que mil dias se conviertan en un numero mas.",
+        source: "minecraft — ciclo dia/noche de 20 minutos",
+        label: "tiempo — dias invisibles",
+        category: "tiempo"
+      },
+      {
+        text: "Los cultivos crecen solo si estas cerca. Si te vas, se congelan en el tiempo. Como las relaciones que abandonas esperando que sigan vivas cuando vuelvas.",
+        reflection: "Lo que no riegas, no crece. Las personas, los sueños, las pasiones... necesitan tu presencia para existir.",
+        source: "minecraft — mecanica de chunks cargados",
+        label: "tiempo — lo que abandonas",
+        category: "tiempo"
+      },
+      {
+        text: "Las hojas de los arboles desaparecen solas cuando cortas el tronco. Lento, hoja por hoja. Asi se desmorona todo cuando le quitas el soporte.",
+        reflection: "Las cosas no colapsan de golpe. Se caen hoja por hoja, en silencio, cuando la base que las sostenia ya no esta.",
+        source: "minecraft — decay de hojas",
+        label: "tiempo — desmoronarse despacio",
+        category: "tiempo"
+      },
+      {
+        text: "La musica de Minecraft aparece cuando menos la esperas. En silencio total, de la nada, suena una melodia triste. Y de repente el mundo se siente mas grande y tu mas pequeno.",
+        reflection: "La belleza aparece sin avisar. En los momentos mas mundanos, algo te recuerda que estas vivo y que eso, por si solo, es extraordinario.",
+        source: "minecraft — soundtrack de c418",
+        label: "tiempo — musica inesperada",
+        category: "tiempo"
+      },
+      {
+        text: "Los bloques de hierba se convierten en tierra cuando los cubres. Sin luz, sin aire, lo verde muere. Pero si le devuelves la luz, la hierba vuelve. Siempre vuelve.",
+        reflection: "La oscuridad puede quitarte el color, la energia, la vida. Pero nunca del todo. Dale luz a lo que parece muerto y mira como revive.",
+        source: "minecraft — propagacion de hierba",
+        label: "tiempo — revivir",
+        category: "tiempo"
+      },
+      {
+        text: "Los discos de musica solo se obtienen cuando un esqueleto mata a un creeper. Algo bello solo nace del conflicto entre dos fuerzas que intentaban destruirte.",
+        reflection: "Las cosas mas hermosas de la vida nacen del caos. De los errores. De las tragedias que no pudiste evitar. De la colision de lo que te rompe.",
+        source: "minecraft — discos de musica",
+        label: "tiempo — belleza del caos",
+        category: "tiempo"
+      },
+    ];
+
+    // STATE
+    let currentCat = 'all';
+    let count = 0;
+    let isAnimating = false;
+    let lastIdx = -1;
+
+    // DOM
+    const quoteText = document.getElementById('quoteText');
+    const reflection = document.getElementById('reflection');
+    const source = document.getElementById('source');
+    const contextLabel = document.getElementById('contextLabel');
+    const dayCounter = document.getElementById('dayCounter');
+    const nextBtn = document.getElementById('nextBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+    const counterText = document.getElementById('counterText');
+    const dayNight = document.getElementById('dayNight');
+    const catPills = document.querySelectorAll('.cat-pill');
+
+    // RAIN
+    function initRain() {
+      const container = document.getElementById('rain');
+      for (let i = 0; i < 80; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.height = (30 + Math.random() * 80) + 'px';
+        drop.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        drop.style.animationDelay = Math.random() * 5 + 's';
+        container.appendChild(drop);
+      }
+    }
+
+    // PIXEL PARTICLES
+    function initPixels() {
+      const container = document.getElementById('pixels');
+      for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'pixel';
+        const size = 2 + Math.floor(Math.random() * 4);
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.bottom = Math.random() * 30 + '%';
+        p.style.animationDuration = (10 + Math.random() * 20) + 's';
+        p.style.animationDelay = Math.random() * 15 + 's';
+        p.style.background = ['var(--green-muted)', 'var(--brown-light)', 'var(--stone)'][Math.floor(Math.random() * 3)];
+        container.appendChild(p);
+      }
+    }
+
+    initRain();
+    initPixels();
+
+    // FILTER
+    function getFiltered() {
+      if (currentCat === 'all') return quotes;
+      return quotes.filter(q => q.category === currentCat);
+    }
+
+    // GENERATE
+    function generateQuote() {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const filtered = getFiltered();
+      if (!filtered.length) return;
+
+      let idx;
+      do { idx = Math.floor(Math.random() * filtered.length); }
+      while (idx === lastIdx && filtered.length > 1);
+      lastIdx = idx;
+
+      const q = filtered[idx];
+      count++;
+
+      // Blur out
+      const els = [quoteText, reflection, source, contextLabel, dayCounter];
+      els.forEach(el => el.classList.add('blur-out'));
+
+      setTimeout(() => {
+        quoteText.textContent = q.text;
+        reflection.textContent = q.reflection;
+        source.innerHTML = '<span class="source-line"></span>' + q.source;
+        contextLabel.textContent = q.label;
+        dayCounter.textContent = 'dia ' + count;
+
+        // Update day/night blocks
+        const blocks = dayNight.querySelectorAll('.dn-block');
+        const fillCount = Math.min(count, blocks.length);
+        blocks.forEach((b, i) => {
+          b.classList.toggle('filled', i < fillCount);
+        });
+
+        counterText.textContent = 'reflexion ' + count;
+
+        els.forEach(el => {
+          el.classList.remove('blur-out');
+          el.classList.add('blur-in');
+        });
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            els.forEach(el => el.classList.remove('blur-in'));
+            isAnimating = false;
+          });
+        });
+      }, 600);
+    }
+
+    // COPY
+    function copyQuote() {
+      const txt = quoteText.textContent + '\n\n' + reflection.textContent + '\n\n— ' + source.textContent.trim();
+      navigator.clipboard.writeText(txt).then(() => {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      });
+    }
+
+    // EVENTS
+    nextBtn.addEventListener('click', generateQuote);
+    copyBtn.addEventListener('click', copyQuote);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        generateQuote();
+      }
+    });
+
+    catPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        catPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentCat = pill.dataset.cat;
+        lastIdx = -1;
+        generateQuote();
+      });
+    });
+
+    // PARALLAX
+    document.addEventListener('mousemove', (e) => {
+      const card = document.getElementById('quoteCard');
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / 60;
+      const dy = (e.clientY - cy) / 60;
+      card.style.transform = `perspective(1200px) rotateY(${dx * 0.2}deg) rotateX(${-dy * 0.2}deg)`;
+    });
+  </script>
+</body>
+</html>
