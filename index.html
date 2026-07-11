@@ -19,6 +19,10 @@
       --text-secondary: #888888;
       --accent: #e0e0e0;
       --accent-glow: rgba(255, 255, 255, 0.08);
+      --mood-normal: #3b82f6;
+      --mood-bad: #ef4444;
+      --mood-fire: #f59e0b;
+      --mood-real: #8b5cf6;
     }
 
     html {
@@ -36,6 +40,19 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      transition: background 0.6s ease;
+    }
+
+    body.mood-bad {
+      background: linear-gradient(135deg, #0a0a0a 0%, #2a0a0a 100%);
+    }
+
+    body.mood-fire {
+      background: linear-gradient(135deg, #0a0a0a 0%, #2a1a0a 100%);
+    }
+
+    body.mood-real {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 100%);
     }
 
     /* Animated background orbs with blur */
@@ -56,6 +73,7 @@
       filter: blur(80px);
       opacity: 0.15;
       animation: orbFloat 20s ease-in-out infinite;
+      transition: background 0.6s ease;
     }
 
     .orb:nth-child(1) {
@@ -68,6 +86,18 @@
       animation-duration: 25s;
     }
 
+    body.mood-bad .orb:nth-child(1) {
+      background: radial-gradient(circle, #ff4444 0%, transparent 70%);
+    }
+
+    body.mood-fire .orb:nth-child(1) {
+      background: radial-gradient(circle, #ff9900 0%, transparent 70%);
+    }
+
+    body.mood-real .orb:nth-child(1) {
+      background: radial-gradient(circle, #9966ff 0%, transparent 70%);
+    }
+
     .orb:nth-child(2) {
       width: 400px;
       height: 400px;
@@ -76,6 +106,18 @@
       right: -5%;
       animation-delay: -5s;
       animation-duration: 22s;
+    }
+
+    body.mood-bad .orb:nth-child(2) {
+      background: radial-gradient(circle, #ff6666 0%, transparent 70%);
+    }
+
+    body.mood-fire .orb:nth-child(2) {
+      background: radial-gradient(circle, #ffaa22 0%, transparent 70%);
+    }
+
+    body.mood-real .orb:nth-child(2) {
+      background: radial-gradient(circle, #bb88ff 0%, transparent 70%);
     }
 
     .orb:nth-child(3) {
@@ -87,6 +129,18 @@
       transform: translate(-50%, -50%);
       animation-delay: -10s;
       animation-duration: 18s;
+    }
+
+    body.mood-bad .orb:nth-child(3) {
+      background: radial-gradient(circle, #ff7777 0%, transparent 70%);
+    }
+
+    body.mood-fire .orb:nth-child(3) {
+      background: radial-gradient(circle, #ffbb33 0%, transparent 70%);
+    }
+
+    body.mood-real .orb:nth-child(3) {
+      background: radial-gradient(circle, #cc99ff 0%, transparent 70%);
     }
 
     @keyframes orbFloat {
@@ -114,7 +168,7 @@
       pointer-events: none;
       z-index: 1;
       opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves=[...]
       background-repeat: repeat;
       background-size: 256px 256px;
     }
@@ -144,6 +198,19 @@
       text-transform: uppercase;
       color: var(--text-secondary);
       margin-bottom: 0.3rem;
+      transition: color 0.6s ease;
+    }
+
+    body.mood-bad .header h1 {
+      color: #ff4444;
+    }
+
+    body.mood-fire .header h1 {
+      color: #ff9900;
+    }
+
+    body.mood-real .header h1 {
+      color: #9966ff;
     }
 
     .header .line {
@@ -151,6 +218,19 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--text-secondary), transparent);
       margin: 0 auto;
+      transition: background 0.6s ease;
+    }
+
+    body.mood-bad .header .line {
+      background: linear-gradient(90deg, transparent, #ff4444, transparent);
+    }
+
+    body.mood-fire .header .line {
+      background: linear-gradient(90deg, transparent, #ff9900, transparent);
+    }
+
+    body.mood-real .header .line {
+      background: linear-gradient(90deg, transparent, #9966ff, transparent);
     }
 
     /* Quote card */
@@ -171,9 +251,39 @@
       justify-content: center;
     }
 
+    body.mood-bad .quote-card {
+      border-color: rgba(255, 68, 68, 0.15);
+      background: rgba(255, 68, 68, 0.02);
+    }
+
+    body.mood-fire .quote-card {
+      border-color: rgba(255, 153, 0, 0.15);
+      background: rgba(255, 153, 0, 0.02);
+    }
+
+    body.mood-real .quote-card {
+      border-color: rgba(153, 102, 255, 0.15);
+      background: rgba(153, 102, 255, 0.02);
+    }
+
     .quote-card:hover {
       border-color: rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.03);
+    }
+
+    body.mood-bad .quote-card:hover {
+      border-color: rgba(255, 68, 68, 0.3);
+      background: rgba(255, 68, 68, 0.05);
+    }
+
+    body.mood-fire .quote-card:hover {
+      border-color: rgba(255, 153, 0, 0.3);
+      background: rgba(255, 153, 0, 0.05);
+    }
+
+    body.mood-real .quote-card:hover {
+      border-color: rgba(153, 102, 255, 0.3);
+      background: rgba(153, 102, 255, 0.05);
     }
 
     .quote-card::before {
@@ -200,6 +310,19 @@
       top: 10px;
       left: 25px;
       user-select: none;
+      transition: color 0.6s ease;
+    }
+
+    body.mood-bad .quote-mark {
+      color: rgba(255, 68, 68, 0.15);
+    }
+
+    body.mood-fire .quote-mark {
+      color: rgba(255, 153, 0, 0.15);
+    }
+
+    body.mood-real .quote-mark {
+      color: rgba(153, 102, 255, 0.15);
     }
 
     /* Quote text */
@@ -285,6 +408,18 @@
       animation: fadeInUp 1s ease-out 0.6s forwards;
     }
 
+    body.mood-bad .btn-generate {
+      border-color: rgba(255, 68, 68, 0.3);
+    }
+
+    body.mood-fire .btn-generate {
+      border-color: rgba(255, 153, 0, 0.3);
+    }
+
+    body.mood-real .btn-generate {
+      border-color: rgba(153, 102, 255, 0.3);
+    }
+
     .btn-generate::before {
       content: '';
       position: absolute;
@@ -298,9 +433,36 @@
       transition: width 0.6s ease, height 0.6s ease;
     }
 
+    body.mood-bad .btn-generate::before {
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    body.mood-fire .btn-generate::before {
+      background: rgba(255, 153, 0, 0.1);
+    }
+
+    body.mood-real .btn-generate::before {
+      background: rgba(153, 102, 255, 0.1);
+    }
+
     .btn-generate:hover {
       border-color: rgba(255, 255, 255, 0.3);
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+    }
+
+    body.mood-bad .btn-generate:hover {
+      border-color: rgba(255, 68, 68, 0.5);
+      box-shadow: 0 0 30px rgba(255, 68, 68, 0.1);
+    }
+
+    body.mood-fire .btn-generate:hover {
+      border-color: rgba(255, 153, 0, 0.5);
+      box-shadow: 0 0 30px rgba(255, 153, 0, 0.1);
+    }
+
+    body.mood-real .btn-generate:hover {
+      border-color: rgba(153, 102, 255, 0.5);
+      box-shadow: 0 0 30px rgba(153, 102, 255, 0.1);
     }
 
     .btn-generate:hover::before {
@@ -378,6 +540,18 @@
       pointer-events: none;
     }
 
+    body.mood-bad .ripple {
+      background: rgba(255, 68, 68, 0.3);
+    }
+
+    body.mood-fire .ripple {
+      background: rgba(255, 153, 0, 0.3);
+    }
+
+    body.mood-real .ripple {
+      background: rgba(153, 102, 255, 0.3);
+    }
+
     @keyframes rippleEffect {
       to {
         transform: scale(4);
@@ -404,6 +578,18 @@
       border-radius: 50%;
       filter: blur(1px);
       animation: particleFade 1.2s ease-out forwards;
+    }
+
+    body.mood-bad .particle {
+      background: rgba(255, 68, 68, 0.6);
+    }
+
+    body.mood-fire .particle {
+      background: rgba(255, 153, 0, 0.6);
+    }
+
+    body.mood-real .particle {
+      background: rgba(153, 102, 255, 0.6);
     }
 
     @keyframes particleFade {
@@ -517,6 +703,81 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
+    /* Mood selector */
+    .mood-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.1s forwards;
+    }
+
+    .mood-btn {
+      padding: 8px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      font-weight: 500;
+    }
+
+    .mood-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .mood-btn.active {
+      transform: scale(1.05);
+    }
+
+    .mood-btn.mood-normal {
+      border-color: var(--mood-normal);
+      color: var(--mood-normal);
+    }
+
+    .mood-btn.mood-normal.active {
+      background: rgba(59, 130, 246, 0.15);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .mood-btn.mood-bad {
+      border-color: var(--mood-bad);
+      color: var(--mood-bad);
+    }
+
+    .mood-btn.mood-bad.active {
+      background: rgba(239, 68, 68, 0.15);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .mood-btn.mood-fire {
+      border-color: var(--mood-fire);
+      color: var(--mood-fire);
+    }
+
+    .mood-btn.mood-fire.active {
+      background: rgba(245, 158, 11, 0.15);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .mood-btn.mood-real {
+      border-color: var(--mood-real);
+      color: var(--mood-real);
+    }
+
+    .mood-btn.mood-real.active {
+      background: rgba(139, 92, 246, 0.15);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
       .container {
@@ -530,6 +791,13 @@
         font-size: 3.5rem;
         top: 5px;
         left: 15px;
+      }
+      .mood-selector {
+        gap: 6px;
+      }
+      .mood-btn {
+        padding: 6px 12px;
+        font-size: 0.6rem;
       }
     }
   </style>
@@ -552,6 +820,14 @@
       <div class="line"></div>
     </div>
 
+    <!-- Mood selector -->
+    <div class="mood-selector">
+      <button class="mood-btn mood-normal active" data-mood="normal">Normal</button>
+      <button class="mood-btn mood-bad" data-mood="bad">Mood Malo</button>
+      <button class="mood-btn mood-fire" data-mood="fire">Gym 💪</button>
+      <button class="mood-btn mood-real" data-mood="real">Cruda Realidad</button>
+    </div>
+
     <!-- Category filters -->
     <div class="categories">
       <button class="category-pill active" data-category="all">Todas</button>
@@ -560,6 +836,9 @@
       <button class="category-pill" data-category="fuerza">Fuerza</button>
       <button class="category-pill" data-category="sabiduria">Sabiduria</button>
       <button class="category-pill" data-category="creatividad">Creatividad</button>
+      <button class="category-pill" data-category="personal">Personal</button>
+      <button class="category-pill" data-category="gym">Gym</button>
+      <button class="category-pill" data-category="realidad">Realidad</button>
     </div>
 
     <!-- Quote display -->
@@ -583,87 +862,160 @@
   <div class="copied-toast" id="toast">Frase copiada al portapapeles</div>
 
   <script>
-    // Quotes database
-    const quotes = [
-      // Vida
-      { text: "El unico modo de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs", category: "vida" },
-      { text: "La vida es lo que pasa mientras estas ocupado haciendo otros planes.", author: "John Lennon", category: "vida" },
-      { text: "Vive como si fueras a morir manana. Aprende como si fueras a vivir para siempre.", author: "Mahatma Gandhi", category: "vida" },
-      { text: "No cuentes los dias, haz que los dias cuenten.", author: "Muhammad Ali", category: "vida" },
-      { text: "La vida no se mide por las veces que respiras, sino por los momentos que te dejan sin aliento.", author: "Maya Angelou", category: "vida" },
-      { text: "El proposito de la vida es vivirla, saborear la experiencia al maximo.", author: "Eleanor Roosevelt", category: "vida" },
-      { text: "La vida es realmente simple, pero insistimos en hacerla complicada.", author: "Confucio", category: "vida" },
-      { text: "Al final, no son los anos de tu vida los que cuentan, es la vida en tus anos.", author: "Abraham Lincoln", category: "vida" },
-      { text: "Cada dia es una nueva oportunidad para cambiar tu vida.", author: "Paulo Coelho", category: "vida" },
-      { text: "La felicidad no es algo hecho. Viene de tus propias acciones.", author: "Dalai Lama", category: "vida" },
-      { text: "Sigue tu corazon, pero lleva tu cerebro contigo.", author: "Alfred Adler", category: "vida" },
-      { text: "El tiempo es lo mas valioso que un hombre puede gastar.", author: "Teofrasto", category: "vida" },
-      { text: "No es la mas fuerte de las especies la que sobrevive, sino la que mejor se adapta al cambio.", author: "Charles Darwin", category: "vida" },
+    // Quotes database with MOODS
+    const quotesByMood = {
+      normal: [
+        // Vida
+        { text: "El unico modo de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs", category: "vida" },
+        { text: "La vida es lo que pasa mientras estas ocupado haciendo otros planes.", author: "John Lennon", category: "vida" },
+        { text: "Vive como si fueras a morir manana. Aprende como si fueras a vivir para siempre.", author: "Mahatma Gandhi", category: "vida" },
+        { text: "No cuentes los dias, haz que los dias cuenten.", author: "Muhammad Ali", category: "vida" },
+        { text: "La vida no se mide por las veces que respiras, sino por los momentos que te dejan sin aliento.", author: "Maya Angelou", category: "vida" },
+        { text: "El proposito de la vida es vivirla, saborear la experiencia al maximo.", author: "Eleanor Roosevelt", category: "vida" },
+        { text: "La vida es realmente simple, pero insistimos en hacerla complicada.", author: "Confucio", category: "vida" },
+        { text: "Al final, no son los anos de tu vida los que cuentan, es la vida en tus anos.", author: "Abraham Lincoln", category: "vida" },
+        { text: "Cada dia es una nueva oportunidad para cambiar tu vida.", author: "Paulo Coelho", category: "vida" },
+        { text: "La felicidad no es algo hecho. Viene de tus propias acciones.", author: "Dalai Lama", category: "vida" },
+        { text: "Sigue tu corazon, pero lleva tu cerebro contigo.", author: "Alfred Adler", category: "vida" },
+        { text: "El tiempo es lo mas valioso que un hombre puede gastar.", author: "Teofrasto", category: "vida" },
+        { text: "No es la mas fuerte de las especies la que sobrevive, sino la que mejor se adapta al cambio.", author: "Charles Darwin", category: "vida" },
 
-      // Exito
-      { text: "El exito es ir de fracaso en fracaso sin perder el entusiasmo.", author: "Winston Churchill", category: "exito" },
-      { text: "El exito no es definitivo, el fracaso no es fatal: lo que cuenta es el coraje para continuar.", author: "Winston Churchill", category: "exito" },
-      { text: "No he fracasado. He encontrado 10,000 formas que no funcionan.", author: "Thomas Edison", category: "exito" },
-      { text: "El exito generalmente llega a quienes estan demasiado ocupados para buscarlo.", author: "Henry David Thoreau", category: "exito" },
-      { text: "La unica forma de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs", category: "exito" },
-      { text: "Cree que puedes y ya estas a medio camino.", author: "Theodore Roosevelt", category: "exito" },
-      { text: "El secreto del exito es la constancia del proposito.", author: "Benjamin Disraeli", category: "exito" },
-      { text: "Tu tiempo es limitado, no lo desperdicies viviendo la vida de alguien mas.", author: "Steve Jobs", category: "exito" },
-      { text: "Las grandes cosas nunca vinieron de las zonas de confort.", author: "Neil Armstrong", category: "exito" },
-      { text: "Si puedes sonarlo, puedes hacerlo.", author: "Walt Disney", category: "exito" },
-      { text: "El unico lugar donde el exito viene antes que el trabajo es en el diccionario.", author: "Vidal Sassoon", category: "exito" },
-      { text: "La mejor venganza es un exito masivo.", author: "Frank Sinatra", category: "exito" },
-      { text: "Nunca es demasiado tarde para ser lo que podrias haber sido.", author: "George Eliot", category: "exito" },
-      { text: "La suerte es lo que pasa cuando la preparacion se encuentra con la oportunidad.", author: "Seneca", category: "exito" },
+        // Exito
+        { text: "El exito es ir de fracaso en fracaso sin perder el entusiasmo.", author: "Winston Churchill", category: "exito" },
+        { text: "El exito no es definitivo, el fracaso no es fatal: lo que cuenta es el coraje para continuar.", author: "Winston Churchill", category: "exito" },
+        { text: "No he fracasado. He encontrado 10,000 formas que no funcionan.", author: "Thomas Edison", category: "exito" },
+        { text: "El exito generalmente llega a quienes estan demasiado ocupados para buscarlo.", author: "Henry David Thoreau", category: "exito" },
+        { text: "La unica forma de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs", category: "exito" },
+        { text: "Cree que puedes y ya estas a medio camino.", author: "Theodore Roosevelt", category: "exito" },
+        { text: "El secreto del exito es la constancia del proposito.", author: "Benjamin Disraeli", category: "exito" },
+        { text: "Tu tiempo es limitado, no lo desperdicies viviendo la vida de alguien mas.", author: "Steve Jobs", category: "exito" },
+        { text: "Las grandes cosas nunca vinieron de las zonas de confort.", author: "Neil Armstrong", category: "exito" },
+        { text: "Si puedes sonarlo, puedes hacerlo.", author: "Walt Disney", category: "exito" },
+        { text: "El unico lugar donde el exito viene antes que el trabajo es en el diccionario.", author: "Vidal Sassoon", category: "exito" },
+        { text: "La mejor venganza es un exito masivo.", author: "Frank Sinatra", category: "exito" },
+        { text: "Nunca es demasiado tarde para ser lo que podrias haber sido.", author: "George Eliot", category: "exito" },
+        { text: "La suerte es lo que pasa cuando la preparacion se encuentra con la oportunidad.", author: "Seneca", category: "exito" },
 
-      // Fuerza
-      { text: "La fuerza no proviene de la capacidad fisica. Proviene de una voluntad indomable.", author: "Mahatma Gandhi", category: "fuerza" },
-      { text: "Caer esta permitido. Levantarse es obligatorio.", author: "Proverbio ruso", category: "fuerza" },
-      { text: "Lo que no te mata, te hace mas fuerte.", author: "Friedrich Nietzsche", category: "fuerza" },
-      { text: "En medio de la dificultad reside la oportunidad.", author: "Albert Einstein", category: "fuerza" },
-      { text: "La persistencia es el camino del exito.", author: "Charles Chaplin", category: "fuerza" },
-      { text: "No importa lo lento que vayas, siempre y cuando no te detengas.", author: "Confucio", category: "fuerza" },
-      { text: "El mundo rompe a todos, y despues, algunos son fuertes en los lugares rotos.", author: "Ernest Hemingway", category: "fuerza" },
-      { text: "Nuestras mayores debilidades se convierten en nuestras mayores fortalezas.", author: "Sigmund Freud", category: "fuerza" },
-      { text: "Un heroe es aquel que hace lo que puede.", author: "Romain Rolland", category: "fuerza" },
-      { text: "Donde hay una voluntad, hay un camino.", author: "Proverbio", category: "fuerza" },
-      { text: "El coraje no es la ausencia de miedo, sino el triunfo sobre el.", author: "Nelson Mandela", category: "fuerza" },
-      { text: "Solo quien arriesga ir demasiado lejos puede descubrir hasta donde puede llegar.", author: "T.S. Eliot", category: "fuerza" },
-      { text: "La fortaleza no se mide en los momentos de comodidad, sino en tiempos de desafio y controversia.", author: "Martin Luther King Jr.", category: "fuerza" },
-      { text: "Conviertete en el cambio que deseas ver en el mundo.", author: "Mahatma Gandhi", category: "fuerza" },
+        // Fuerza
+        { text: "La fuerza no proviene de la capacidad fisica. Proviene de una voluntad indomable.", author: "Mahatma Gandhi", category: "fuerza" },
+        { text: "Caer esta permitido. Levantarse es obligatorio.", author: "Proverbio ruso", category: "fuerza" },
+        { text: "Lo que no te mata, te hace mas fuerte.", author: "Friedrich Nietzsche", category: "fuerza" },
+        { text: "En medio de la dificultad reside la oportunidad.", author: "Albert Einstein", category: "fuerza" },
+        { text: "La persistencia es el camino del exito.", author: "Charles Chaplin", category: "fuerza" },
+        { text: "No importa lo lento que vayas, siempre y cuando no te detengas.", author: "Confucio", category: "fuerza" },
+        { text: "El mundo rompe a todos, y despues, algunos son fuertes en los lugares rotos.", author: "Ernest Hemingway", category: "fuerza" },
+        { text: "Nuestras mayores debilidades se convierten en nuestras mayores fortalezas.", author: "Sigmund Freud", category: "fuerza" },
+        { text: "Un heroe es aquel que hace lo que puede.", author: "Romain Rolland", category: "fuerza" },
+        { text: "Donde hay una voluntad, hay un camino.", author: "Proverbio", category: "fuerza" },
+        { text: "El coraje no es la ausencia de miedo, sino el triunfo sobre el.", author: "Nelson Mandela", category: "fuerza" },
+        { text: "Solo quien arriesga ir demasiado lejos puede descubrir hasta donde puede llegar.", author: "T.S. Eliot", category: "fuerza" },
+        { text: "La fortaleza no se mide en los momentos de comodidad, sino en tiempos de desafio y controversia.", author: "Martin Luther King Jr.", category: "fuerza" },
+        { text: "Conviertete en el cambio que deseas ver en el mundo.", author: "Mahatma Gandhi", category: "fuerza" },
 
-      // Sabiduria
-      { text: "Solo se que no se nada.", author: "Socrates", category: "sabiduria" },
-      { text: "La imaginacion es mas importante que el conocimiento.", author: "Albert Einstein", category: "sabiduria" },
-      { text: "Conocerte a ti mismo es el principio de toda sabiduria.", author: "Aristoteles", category: "sabiduria" },
-      { text: "La verdadera sabiduria esta en reconocer la propia ignorancia.", author: "Socrates", category: "sabiduria" },
-      { text: "La educacion es el arma mas poderosa que puedes usar para cambiar el mundo.", author: "Nelson Mandela", category: "sabiduria" },
-      { text: "El que aprende y aprende y no practica lo que sabe, es como el que ara y ara y no siembra.", author: "Platon", category: "sabiduria" },
-      { text: "La mente que se abre a una nueva idea jamas vuelve a su tamano original.", author: "Albert Einstein", category: "sabiduria" },
-      { text: "Piensa dos veces antes de hablar, porque tus palabras plantaran la semilla del exito o del fracaso.", author: "Napoleon Hill", category: "sabiduria" },
-      { text: "Los sabios hablan porque tienen algo que decir; los tontos porque tienen que decir algo.", author: "Platon", category: "sabiduria" },
-      { text: "Aprender sin pensar es inutil. Pensar sin aprender, peligroso.", author: "Confucio", category: "sabiduria" },
-      { text: "La lectura es a la mente lo que el ejercicio es al cuerpo.", author: "Joseph Addison", category: "sabiduria" },
-      { text: "No busques ser una persona de exito, sino una persona de valor.", author: "Albert Einstein", category: "sabiduria" },
-      { text: "La duda es el principio de la sabiduria.", author: "Aristoteles", category: "sabiduria" },
+        // Sabiduria
+        { text: "Solo se que no se nada.", author: "Socrates", category: "sabiduria" },
+        { text: "La imaginacion es mas importante que el conocimiento.", author: "Albert Einstein", category: "sabiduria" },
+        { text: "Conocerte a ti mismo es el principio de toda sabiduria.", author: "Aristoteles", category: "sabiduria" },
+        { text: "La verdadera sabiduria esta en reconocer la propia ignorancia.", author: "Socrates", category: "sabiduria" },
+        { text: "La educacion es el arma mas poderosa que puedes usar para cambiar el mundo.", author: "Nelson Mandela", category: "sabiduria" },
+        { text: "El que aprende y aprende y no practica lo que sabe, es como el que ara y ara y no siembra.", author: "Platon", category: "sabiduria" },
+        { text: "La mente que se abre a una nueva idea jamas vuelve a su tamano original.", author: "Albert Einstein", category: "sabiduria" },
+        { text: "Piensa dos veces antes de hablar, porque tus palabras plantaran la semilla del exito o del fracaso.", author: "Napoleon Hill", category: "sabiduria" },
+        { text: "Los sabios hablan porque tienen algo que decir; los tontos porque tienen que decir algo.", author: "Platon", category: "sabiduria" },
+        { text: "Aprender sin pensar es inutil. Pensar sin aprender, peligroso.", author: "Confucio", category: "sabiduria" },
+        { text: "La lectura es a la mente lo que el ejercicio es al cuerpo.", author: "Joseph Addison", category: "sabiduria" },
+        { text: "No busques ser una persona de exito, sino una persona de valor.", author: "Albert Einstein", category: "sabiduria" },
+        { text: "La duda es el principio de la sabiduria.", author: "Aristoteles", category: "sabiduria" },
 
-      // Creatividad
-      { text: "La creatividad es la inteligencia divirtiendose.", author: "Albert Einstein", category: "creatividad" },
-      { text: "Todo nino es un artista. El problema es como seguir siendo un artista al crecer.", author: "Pablo Picasso", category: "creatividad" },
-      { text: "La logica te llevara de A a B. La imaginacion te llevara a todas partes.", author: "Albert Einstein", category: "creatividad" },
-      { text: "No puedes agotar la creatividad. Cuanto mas la usas, mas tienes.", author: "Maya Angelou", category: "creatividad" },
-      { text: "La creatividad requiere el coraje de soltar las certezas.", author: "Erich Fromm", category: "creatividad" },
-      { text: "Cada acto de creacion es ante todo un acto de destruccion.", author: "Pablo Picasso", category: "creatividad" },
-      { text: "La curiosidad es la mecha de la vela del aprendizaje.", author: "William Arthur Ward", category: "creatividad" },
-      { text: "El arte es la mentira que nos permite comprender la verdad.", author: "Pablo Picasso", category: "creatividad" },
-      { text: "La innovacion distingue al lider del seguidor.", author: "Steve Jobs", category: "creatividad" },
-      { text: "Pinta como si fuera lo mas natural del mundo.", author: "Leonardo da Vinci", category: "creatividad" },
-      { text: "La simplicidad es la maxima sofisticacion.", author: "Leonardo da Vinci", category: "creatividad" },
-      { text: "No hay reglas. Asi es como el arte nace, como se producen los avances.", author: "Helen Frankenthaler", category: "creatividad" },
-      { text: "El genio es uno por ciento de inspiracion y noventa y nueve por ciento de transpiracion.", author: "Thomas Edison", category: "creatividad" },
-    ];
+        // Creatividad
+        { text: "La creatividad es la inteligencia divirtiendose.", author: "Albert Einstein", category: "creatividad" },
+        { text: "Todo nino es un artista. El problema es como seguir siendo un artista al crecer.", author: "Pablo Picasso", category: "creatividad" },
+        { text: "La logica te llevara de A a B. La imaginacion te llevara a todas partes.", author: "Albert Einstein", category: "creatividad" },
+        { text: "No puedes agotar la creatividad. Cuanto mas la usas, mas tienes.", author: "Maya Angelou", category: "creatividad" },
+        { text: "La creatividad requiere el coraje de soltar las certezas.", author: "Erich Fromm", category: "creatividad" },
+        { text: "Cada acto de creacion es ante todo un acto de destruccion.", author: "Pablo Picasso", category: "creatividad" },
+        { text: "La curiosidad es la mecha de la vela del aprendizaje.", author: "William Arthur Ward", category: "creatividad" },
+        { text: "El arte es la mentira que nos permite comprender la verdad.", author: "Pablo Picasso", category: "creatividad" },
+        { text: "La innovacion distingue al lider del seguidor.", author: "Steve Jobs", category: "creatividad" },
+        { text: "Pinta como si fuera lo mas natural del mundo.", author: "Leonardo da Vinci", category: "creatividad" },
+        { text: "La simplicidad es la maxima sofisticacion.", author: "Leonardo da Vinci", category: "creatividad" },
+        { text: "No hay reglas. Asi es como el arte nace, como se producen los avances.", author: "Helen Frankenthaler", category: "creatividad" },
+        { text: "El genio es uno por ciento de inspiracion y noventa y nueve por ciento de transpiracion.", author: "Thomas Edison", category: "creatividad" },
+
+        // Personal Development
+        { text: "Tu identidad no es tu condicion. Eres mas que tus circunstancias.", author: "Anónimo", category: "personal" },
+        { text: "El crecimiento comienza donde termina tu zona de confort.", author: "Roy Bennett", category: "personal" },
+        { text: "No te compares con otros. Compárate solo con quien eras ayer.", author: "Anónimo", category: "personal" },
+        { text: "La disciplina es elegir lo que quieres mas sobre lo que quieres ahora.", author: "Augustus Hill", category: "personal" },
+        { text: "Tu valor no esta en lo que tienes, sino en lo que haces.", author: "Anónimo", category: "personal" },
+      ],
+
+      bad: [
+        { text: "A veces la gente es una mierda, y eso esta bien. El problema es seguir esperando lo contrario.", author: "Anónimo", category: "realidad" },
+        { text: "No todas las personas merecen tu amabilidad. Algunas ni merecen tu presencia.", author: "Anónimo", category: "realidad" },
+        { text: "La desilusion es solo la esperanza encontrando la realidad.", author: "Anónimo", category: "realidad" },
+        { text: "Nadie va a salvarte. Tienes que ser tu propio heroe.", author: "Anónimo", category: "realidad" },
+        { text: "La depresion no es debilidad. Pero permitir que te destruya, si lo es.", author: "Anónimo", category: "realidad" },
+        { text: "El silencio de tus amigos duele mas que el ataque de tus enemigos.", author: "Anónimo", category: "realidad" },
+        { text: "No puedes confiar en nadie completamente. Ni en ti mismo a veces.", author: "Anónimo", category: "realidad" },
+        { text: "La soledad es mejor que la compania de personas que no te entienden.", author: "Anónimo", category: "realidad" },
+        { text: "La vida es injusta. Aceptalo y sigue adelante.", author: "Anónimo", category: "realidad" },
+        { text: "Duele, pero tienes que seguir. No tienes otra opcion real.", author: "Anónimo", category: "realidad" },
+        { text: "La gente promete cosas que nunca cumple. Incluyéndote a ti mismo.", author: "Anónimo", category: "realidad" },
+        { text: "Algunos dias solo se trata de sobrevivir. Eso es suficiente.", author: "Anónimo", category: "realidad" },
+        { text: "Tu pasado no define tu futuro, pero si te sigue a todas partes.", author: "Anónimo", category: "realidad" },
+        { text: "La fe sin accion es solo esperanza. Y la esperanza a veces no es suficiente.", author: "Anónimo", category: "realidad" },
+      ],
+
+      fire: [
+        // Gym y entreno
+        { text: "El dolor que sientes hoy sera la fuerza que sentiras manana.", author: "Arnold Schwarzenegger", category: "gym" },
+        { text: "La unica razon por la que pierdes es porque dejas de intentar.", author: "Anónimo", category: "gym" },
+        { text: "Tu musculo no crecera en el gimnasio. Crece mientras descansas. Entrena duro.", author: "Anónimo", category: "gym" },
+        { text: "Si no tienes una razon para sufrir, no mereces el resultado.", author: "Anónimo", category: "gym" },
+        { text: "El entrenamiento es el antidepresivo mas barato que existe.", author: "Anónimo", category: "gym" },
+        { text: "No importa si eres pequeno. Si tu voluntad es grande, eres imbatible.", author: "Anónimo", category: "gym" },
+        { text: "El cuerpo que construyes hoy sera la mente fuerte del manana.", author: "Anónimo", category: "gym" },
+        { text: "La consistencia gana. Siempre. El talento es sobre hielo.", author: "Anónimo", category: "gym" },
+        { text: "Tu unico competidor es quien eras ayer.", author: "Anónimo", category: "gym" },
+        { text: "Una repeticion mas. Una serie mas. Una gota de sudor mas.", author: "Anónimo", category: "gym" },
+        { text: "La gente quiere el resultado pero no quiere el proceso. Eso es el problema.", author: "Anónimo", category: "gym" },
+        { text: "Cada fibra muscular que rasgas hoy es una razon para creer manana.", author: "Anónimo", category: "gym" },
+        { text: "El sudor es grasa llorando. Haz llorar ese musculo.", author: "Anónimo", category: "gym" },
+        { text: "Si quieres cambiar tu vida, tienes que cambiar lo que haces todos los dias.", author: "Anónimo", category: "gym" },
+        { text: "El debil se queja. El fuerte trabaja.", author: "Anónimo", category: "gym" },
+        { text: "Duele? Perfecto. Esta trabajando.", author: "Anónimo", category: "gym" },
+        { text: "Tu limite solo existe en tu mente. Rompelo.", author: "Anónimo", category: "gym" },
+        { text: "Ganador o perdedor. La vaina es que tienes que elegir cada dia.", author: "Anónimo", category: "gym" },
+      ],
+
+      real: [
+        // REALIDAD - La cruda verdad
+        { text: "En el trabajo te van a explotar sin remordimiento. Es negocio, no es personal.", author: "Anónimo", category: "realidad" },
+        { text: "El racismo no es un sentimiento. Es un sistema. Y tu carrera la va a joder.", author: "Anónimo", category: "realidad" },
+        { text: "La discriminacion existe aunque nadie la nombra. Sobrevive siendo mejor.", author: "Anónimo", category: "realidad" },
+        { text: "Tu trabajo no te quiere. Solo quiere tu productividad. No lo olvides.", author: "Anónimo", category: "realidad" },
+        { text: "Las reglas del juego las hacen los que estan arriba. Aprende a jugar o quédate afuera.", author: "Anónimo", category: "realidad" },
+        { text: "La desigualdad no es un accidente. Es por diseno. Lucha de todas formas.", author: "Anónimo", category: "realidad" },
+        { text: "Algunos van a intentar humillarte solo porque pueden. Enséñales que no pueden.", author: "Anónimo", category: "realidad" },
+        { text: "El sistema no fue hecho para ti. Por eso tienes que ser mas fuerte que el sistema.", author: "Anónimo", category: "realidad" },
+        { text: "La injusticia laboral es la norma. La justicia es la excepcion.", author: "Anónimo", category: "realidad" },
+        { text: "Tus derechos en el trabajo son solo derechos si eres lo suficientemente fuerte para defenderlos.", author: "Anónimo", category: "realidad" },
+        { text: "Te van a juzgar por tu cara, tu acento, tu apellido. Sigue adelante de todas formas.", author: "Anónimo", category: "realidad" },
+        { text: "La movilidad social es un mito. Construye tu propio camino.", author: "Anónimo", category: "realidad" },
+        { text: "El racismo se disfraza de merito. Reconocelo. Combatelo.", author: "Anónimo", category: "realidad" },
+        { text: "Te van a pagar menos por el mismo trabajo. Porque piensan que no tienes opcion.", author: "Anónimo", category: "realidad" },
+        { text: "En la sociedad, algunos nacieron en el tercer piso. Tu empezaste en el sotano. Asi que tienes que ser el triple de fuerte.", author: "Anónimo", category: "realidad" },
+        { text: "No es pesimismo. Es realismo. Y el realismo es el primer paso para ganar.", author: "Anónimo", category: "realidad" },
+        { text: "Odia el sistema, no al reflejo. El reflejo eres tu mismo luchando.", author: "Anónimo", category: "realidad" },
+        { text: "Tu potencial no esta limitado por tu realidad. Esta limitado por tu vision.", author: "Anónimo", category: "realidad" },
+        { text: "La injusticia de hoy es la venganza de manana. Pero primero tienes que sobrevivir hoy.", author: "Anónimo", category: "realidad" },
+        { text: "Te van a decir que no eres lo suficiente. Deja que hablen. Tu trabajo habla por ti.", author: "Anónimo", category: "realidad" },
+      ]
+    };
 
     // State
+    let currentMood = 'normal';
     let currentCategory = 'all';
     let currentIndex = 0;
     let quoteCount = 0;
@@ -679,9 +1031,11 @@
     const toast = document.getElementById('toast');
     const particlesContainer = document.getElementById('particles');
     const categoryPills = document.querySelectorAll('.category-pill');
+    const moodBtns = document.querySelectorAll('.mood-btn');
 
     // Get filtered quotes
     function getFilteredQuotes() {
+      const quotes = quotesByMood[currentMood];
       if (currentCategory === 'all') return quotes;
       return quotes.filter(q => q.category === currentCategory);
     }
@@ -722,7 +1076,8 @@
         quoteAuthor.classList.add('blur-in');
 
         // Update counter
-        counter.textContent = `${quoteCount} / ${quotes.length}`;
+        const totalQuotes = quotesByMood[currentMood].length;
+        counter.textContent = `${quoteCount} / ${totalQuotes}`;
 
         // Trigger reflow and remove blur-in
         requestAnimationFrame(() => {
@@ -782,6 +1137,29 @@
       });
     }
 
+    // Change mood
+    function changeMood(mood) {
+      currentMood = mood;
+      lastQuoteIndex = -1;
+      quoteCount = 0;
+      
+      // Update UI
+      document.body.classList.remove('mood-bad', 'mood-fire', 'mood-real');
+      if (mood !== 'normal') {
+        document.body.classList.add(`mood-${mood}`);
+      }
+
+      // Update button states
+      moodBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.mood === mood) {
+          btn.classList.add('active');
+        }
+      });
+
+      generateQuote();
+    }
+
     // Event listeners
     generateBtn.addEventListener('click', (e) => {
       createRipple(e);
@@ -798,6 +1176,13 @@
       }
     });
 
+    // Mood selector
+    moodBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        changeMood(btn.dataset.mood);
+      });
+    });
+
     // Category filtering
     categoryPills.forEach(pill => {
       pill.addEventListener('click', () => {
@@ -805,6 +1190,7 @@
         pill.classList.add('active');
         currentCategory = pill.dataset.category;
         lastQuoteIndex = -1;
+        quoteCount = 0;
         generateQuote();
       });
     });
@@ -821,7 +1207,8 @@
     });
 
     // Initialize counter
-    counter.textContent = `1 / ${quotes.length}`;
+    const initialTotal = quotesByMood.normal.length;
+    counter.textContent = `1 / ${initialTotal}`;
   </script>
 </body>
 </html>
