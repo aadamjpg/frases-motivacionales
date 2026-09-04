@@ -7,7 +7,6 @@ Una web minimalista, moderna y fluida para recibir frases motivacionales según 
 
 👉 [Ver demo en vivo](https://aadamjpg.github.io/frases-motivacionales/)
 
-> Si tienes GitHub Pages activado en el repo, este es el enlace correcto. Si no, actívalo en `Settings > Pages` y actualiza el link.
 
 ## 📖 Descripción
 
@@ -85,9 +84,7 @@ Las contribuciones son bienvenidas, especialmente frases nuevas para cualquiera 
 4. Sube la rama (`git push origin feature/nuevas-frases`)
 5. Abre un Pull Request
 
-## 📄 Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+## 📄OPEN SOURCE
 
 ---
 
