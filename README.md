@@ -38,7 +38,8 @@ Una web minimalista, moderna y fluida para recibir frases motivacionales según 
 ## 📂 Estructura del proyecto
 
 ```
-├── index.html   # Todo el proyecto: markup, estilos y lógica en un solo archivo
+├── index.html   # App de frases motivacionales
+├── personal.html # Página personal independiente
 └── README.md
 ```
 
@@ -51,6 +52,8 @@ No requiere instalación ni build. Solo:
    git clone https://github.com/aadamjpg/frases-motivacionales.git
    ```
 2. Abre `index.html` en tu navegador (doble clic, o usa la extensión "Live Server" en VS Code).
+
+La homepage personal de Adam está separada de la aplicación principal y se puede abrir directamente desde `personal.html` (o en desarrollo con Live Server en `http://localhost:5500/personal.html`). Incluye contenido en inglés y español, un selector de idioma y enlaces a sus perfiles compartidos.
 
 ## 🎮 Cómo usarlo
 

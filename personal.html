@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100d16">
+  <meta name="description" content="La homepage personal de Adam: tecnología, proyectos e ideas en construcción.">
+  <title>Adam — personal homepage</title>
+  <style>
+    .adam-home,
+    .adam-home *,
+    .adam-home *::before,
+    .adam-home *::after {
+      box-sizing: border-box;
+    }
+
+    .adam-home {
+      --bg: #100d16;
+      --panel: #17131e;
+      --panel-soft: #1c1725;
+      --line: #30273c;
+      --line-bright: #49365f;
+      --text: #eeeaf2;
+      --muted: #a39aad;
+      --dim: #96909f;
+      --violet: #ba8cff;
+      --violet-soft: #9873c5;
+      --green: #91c6a6;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2.5rem clamp(1rem, 5vw, 4rem);
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 74% 0%, rgba(96, 57, 126, 0.16), transparent 33rem),
+        radial-gradient(ellipse at 4% 37%, rgba(79, 50, 105, 0.1), transparent 26rem),
+        var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      isolation: isolate;
+    }
+
+    .adam-home a {
+      color: inherit;
+    }
+
+    .adam-home a:focus-visible {
+      border-radius: 0.2rem;
+      outline: 2px solid var(--violet);
+      outline-offset: 5px;
+    }
+
+    .adam-home .page {
+      width: min(100%, 68rem);
+      margin-inline: auto;
+    }
+
+    .adam-home .topline,
+    .adam-home .footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      color: var(--dim);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.045em;
+    }
+
+    .adam-home .topline {
+      margin-bottom: 2.1rem;
+    }
+
+    .adam-home .topline p,
+    .adam-home .footer p {
+      margin: 0;
+    }
+
+    .adam-home .tiny-mark {
+      color: var(--violet);
+    }
+
+    .adam-home .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      align-items: start;
+      gap: clamp(1.25rem, 3vw, 2rem);
+    }
+
+    .adam-home .main-panel,
+    .adam-home .side-panel {
+      border: 1px solid var(--line);
+      background: rgba(23, 19, 30, 0.9);
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.2);
+    }
+
+    .adam-home .main-panel {
+      min-width: 0;
+    }
+
+    .adam-home .side-panel {
+      position: sticky;
+      top: 1rem;
+    }
+
+    .adam-home .window-bar {
+      display: flex;
+      min-height: 2.55rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, #201929, #19151f 72%);
+      color: var(--muted);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.68rem;
+    }
+
+    .adam-home .window-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .adam-home .window-dots {
+      display: flex;
+      flex: none;
+      gap: 0.32rem;
+    }
+
+    .adam-home .window-dots span {
+      width: 0.48rem;
+      height: 0.48rem;
+      border: 1px solid #655375;
+      border-radius: 50%;
+      background: #342641;
+    }
+
+    .adam-home .content {
+      padding: clamp(1.25rem, 4.4vw, 3.3rem);
+    }
+
+    .adam-home .hero {
+      padding: 0.5rem 0 2.35rem;
+    }
+
+    .adam-home .micro-label,
+    .adam-home .section-index,
+    .adam-home .side-label {
+      color: var(--violet-soft);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .adam-home .micro-label {
+      margin: 0 0 0.7rem;
+    }
+
+    .adam-home h1,
+    .adam-home h2,
+    .adam-home h3,
+    .adam-home p {
+      margin-top: 0;
+    }
+
+    .adam-home h1 {
+      margin-bottom: 0.25rem;
+      color: #f7f2fb;
+      font-size: clamp(3.8rem, 11vw, 7.7rem);
+      font-weight: 650;
+      letter-spacing: -0.085em;
+      line-height: 0.98;
+    }
+
+    .adam-home .tagline {
+      margin: 0;
+      color: #c0b5cc;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: clamp(0.83rem, 2vw, 1rem);
+      letter-spacing: -0.025em;
+    }
+
+    .adam-home .hero-note {
+      display: flex;
+      max-width: 42rem;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin: 1.8rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .adam-home .cursor {
+      flex: none;
+      color: var(--violet);
+      font-family: monospace;
+    }
+
+    .adam-home .home-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem 1.15rem;
+      padding: 0.95rem 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .adam-home .home-nav a {
+      color: #beb5c8;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.74rem;
+      text-decoration-color: transparent;
+      text-underline-offset: 0.24rem;
+      transition: color 150ms ease, text-decoration-color 150ms ease;
+    }
+
+    .adam-home .home-nav a:hover {
+      color: #e5d1ff;
+      text-decoration-color: var(--violet-soft);
+    }
+
+    .adam-home .section {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 1.5rem;
+    }
+
+    .adam-home .section:last-child {
+      padding-bottom: 0.4rem;
+      border-bottom: 0;
+    }
+
+    .adam-home .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .adam-home .section-index {
+      flex: none;
+      font-size: 0.66rem;
+    }
+
+    .adam-home h2 {
+      margin-bottom: 0;
+      color: #e9e1f0;
+      font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+    }
+
+    .adam-home .section-copy {
+      max-width: 48rem;
+      margin-bottom: 0.8rem;
+      color: #bcb4c5;
+      font-size: 0.92rem;
+    }
+
+    .adam-home .section-copy:last-child {
+      margin-bottom: 0;
+    }
+
+    .adam-home .interest-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.48rem;
+      margin: 1.25rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .adam-home .interest-list li {
+      padding: 0.37rem 0.62rem;
+      border: 1px solid #382c47;
+      background: #1d1825;
+      color: #d2c7dc;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+      transition: border-color 150ms ease, color 150ms ease, transform 150ms ease;
+    }
+
+    .adam-home .interest-list li:hover {
+      transform: translateY(-2px);
+      border-color: #745595;
+      color: #e4d1fb;
+    }
+
+    .adam-home .project-list {
+      display: grid;
+      gap: 0.65rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .adam-home .project {
+      display: grid;
+      grid-template-columns: minmax(8.5rem, 0.8fr) minmax(0, 1.5fr) auto;
+      align-items: baseline;
+      gap: 0.5rem 1rem;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid var(--line);
+      background: rgba(11, 9, 15, 0.34);
+    }
+
+    .adam-home .project-name {
+      color: #e3d3f4;
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .adam-home .project-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .adam-home .project-status {
+      color: var(--dim);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.64rem;
+      white-space: nowrap;
+    }
+
+    .adam-home .project-status.is-live {
+      color: var(--green);
+    }
+
+    .adam-home .setup-box {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.85rem;
+      padding: 1rem;
+      border: 1px dashed #463650;
+      background: rgba(26, 20, 34, 0.7);
+    }
+
+    .adam-home .setup-glyph {
+      color: var(--violet);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 1.1rem;
+    }
+
+    .adam-home .setup-box p {
+      margin: 0;
+      color: #bcb4c5;
+      font-size: 0.86rem;
+    }
+
+    .adam-home .setup-box p + p {
+      margin-top: 0.5rem;
+      color: var(--dim);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.7rem;
+    }
+
+    .adam-home .contact-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .adam-home .contact-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--line);
+      background: rgba(11, 9, 15, 0.34);
+      color: #d7cede;
+      font-size: 0.8rem;
+    }
+
+    .adam-home .contact-list small {
+      color: var(--dim);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.65rem;
+    }
+
+    .adam-home .side-content {
+      padding: 1rem;
+    }
+
+    .adam-home .side-label {
+      margin: 0 0 0.55rem;
+    }
+
+    .adam-home .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: #b6d7c1;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+    }
+
+    .adam-home .status::before {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 50%;
+      background: #82bd94;
+      box-shadow: 0 0 0.65rem rgba(130, 189, 148, 0.6);
+      content: "";
+    }
+
+    .adam-home .side-divider {
+      height: 1px;
+      margin: 1rem 0;
+      border: 0;
+      background: var(--line);
+    }
+
+    .adam-home .side-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.77rem;
+    }
+
+    .adam-home .side-links {
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .adam-home .side-links a {
+      color: #c5b4d8;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+      text-decoration-color: #56436b;
+      text-underline-offset: 0.2rem;
+    }
+
+    .adam-home .side-links a:hover {
+      color: #e5d1ff;
+    }
+
+    .adam-home .footer {
+      margin-top: 1.3rem;
+    }
+
+    .adam-home .footer .signature {
+      color: #9d8caa;
+    }
+
+    @media (max-width: 780px) {
+      .adam-home .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .adam-home .side-panel {
+        position: static;
+      }
+
+      .adam-home .side-content {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem 1.2rem;
+      }
+
+      .adam-home .side-divider {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .adam-home {
+        padding: 1.25rem 0.8rem 1.5rem;
+      }
+
+      .adam-home .topline {
+        margin-bottom: 1.25rem;
+      }
+
+      .adam-home .window-bar {
+        min-height: 2.3rem;
+        padding-inline: 0.7rem;
+      }
+
+      .adam-home .content {
+        padding: 1.25rem 1rem;
+      }
+
+      .adam-home .hero {
+        padding-bottom: 1.65rem;
+      }
+
+      .adam-home .project {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.12rem 0.6rem;
+      }
+
+      .adam-home .project-description {
+        grid-column: 1;
+      }
+
+      .adam-home .project-status {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+
+      .adam-home .contact-list,
+      .adam-home .side-content {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .adam-home *,
+      .adam-home *::before,
+      .adam-home *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="adam-home">
+  <div class="page">
+    <header class="topline">
+      <p><span class="tiny-mark" aria-hidden="true">✳</span> <span data-i18n="eyebrow">PERSONAL HOMEPAGE</span> <span aria-hidden="true">/</span> <span data-i18n="eyebrow-end">INTERNET, SOMEWHERE</span></p>
+      <p data-i18n="top-note">still here · updated now and then</p>
+    </header>
+
+    <div class="layout">
+      <main class="main-panel">
+        <div class="window-bar" aria-hidden="true">
+          <span class="window-title" data-i18n="window-title">adam://home — personal space</span>
+          <span class="window-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="content">
+          <header class="hero" id="home">
+            <p class="micro-label" data-i18n="micro-label">[ personal homepage · no. 001 ]</p>
+            <h1>Adam</h1>
+            <p class="tagline">somewhere between software and hardware</p>
+            <p class="hero-note"><span class="cursor" aria-hidden="true">&gt;_</span><span data-i18n="hero-note">chill. probably building something.</span></p>
+          </header>
+
+          <nav class="home-nav" aria-label="Page navigation" data-i18n-aria="nav-label">
+            <a href="#about" data-i18n="nav-about">about me</a>
+            <a href="#interests" data-i18n="nav-interests">interests</a>
+            <a href="#projects" data-i18n="nav-projects">projects</a>
+            <a href="#setup" data-i18n="nav-setup">my setup</a>
+            <a href="#contact" data-i18n="nav-contact">find me</a>
+            <a href="#home" role="button" data-language="en" data-i18n-aria="language-en-label" aria-pressed="true" aria-label="Switch language to English">EN</a>
+            <a href="#home" role="button" data-language="es" data-i18n-aria="language-es-label" aria-pressed="false" aria-label="Switch language to Spanish">ES</a>
+          </nav>
+
+          <section class="section" id="about" aria-labelledby="about-title">
+            <div class="section-heading">
+              <span class="section-index">01 /</span>
+              <h2 id="about-title" data-i18n="about-title">About me</h2>
+            </div>
+            <p class="section-copy" data-i18n="about-one">Adam. 13.</p>
+            <p class="section-copy" data-i18n="about-two">Somewhere between software and hardware.</p>
+            <p class="section-copy" data-i18n="about-three">Probably building something.</p>
+          </section>
+
+          <section class="section" id="interests" aria-labelledby="interests-title">
+            <div class="section-heading">
+              <span class="section-index">02 /</span>
+              <h2 id="interests-title" data-i18n="interests-title">Things I’m into</h2>
+            </div>
+            <p class="section-copy" data-i18n="interests-intro">A few things I keep coming back to.</p>
+            <ul class="interest-list">
+              <li data-i18n="interest-programming">Programming</li>
+              <li data-i18n="interest-hardware">Hardware</li>
+              <li data-i18n="interest-ai">AI</li>
+              <li data-i18n="interest-linux">Linux</li>
+              <li data-i18n="interest-security">Cybersecurity</li>
+              <li data-i18n="interest-repair">Device repair</li>
+              <li data-i18n="interest-technology">Technology</li>
+              <li data-i18n="interest-business">Entrepreneurship</li>
+              <li data-i18n="interest-games">Roblox</li>
+            </ul>
+          </section>
+
+          <section class="section" id="projects" aria-labelledby="projects-title">
+            <div class="section-heading">
+              <span class="section-index">03 /</span>
+              <h2 id="projects-title" data-i18n="projects-title">Projects</h2>
+            </div>
+            <p class="section-copy" data-i18n="projects-intro">A few things exist.</p>
+            <ul class="project-list">
+              <li class="project">
+                <span class="project-name"><a href="index.html" data-i18n="project-quotes">Frases Motivacionales</a></span>
+                <p class="project-description" data-i18n="project-quotes-description">A small site for finding a phrase for the day.</p>
+                <span class="project-status is-live" data-i18n="project-quotes-status">[ still here ]</span>
+              </li>
+              <li class="project">
+                <span class="project-name" data-i18n="project-simulator">Internet 2000 Simulator</span>
+                <p class="project-description" data-i18n="project-simulator-description">Somewhere between unfinished and forgotten.</p>
+                <span class="project-status" data-i18n="project-simulator-status">[ somewhere in development ]</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="section" id="setup" aria-labelledby="setup-title">
+            <div class="section-heading">
+              <span class="section-index">04 /</span>
+              <h2 id="setup-title" data-i18n="setup-title">My setup</h2>
+            </div>
+            <div class="setup-box">
+              <span class="setup-glyph" aria-hidden="true">&gt;_</span>
+              <div>
+                <p>AMD Ryzen 5 5500U · Radeon integrated graphics</p>
+                <p>16 GB DDR4 RAM · 512 GB NVMe SSD</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="contact" aria-labelledby="contact-title">
+            <div class="section-heading">
+              <span class="section-index">05 /</span>
+              <h2 id="contact-title" data-i18n="contact-title">Find me</h2>
+            </div>
+            <p class="section-copy" data-i18n="contact-intro">A few places I left open. Discord: nosoyadaam.</p>
+            <ul class="contact-list">
+              <li><a href="https://github.com/aadamjpg" target="_blank" rel="noopener noreferrer">GitHub</a><small>aadamjpg</small></li>
+              <li><a href="https://www.tiktok.com/@addamagh_" target="_blank" rel="noopener noreferrer">TikTok</a><small>@addamagh_</small></li>
+              <li><a href="https://www.roblox.com/es/users/1779235232/profile" target="_blank" rel="noopener noreferrer">Roblox</a><small data-i18n="profile-label">profile</small></li>
+              <li><span>Discord</span><small>nosoyadaam.</small></li>
+            </ul>
+          </section>
+        </div>
+      </main>
+
+      <aside class="side-panel" aria-label="Small details" data-i18n-aria="aside-label">
+        <div class="window-bar" aria-hidden="true">
+          <span class="window-title" data-i18n="details-title">small details</span>
+          <span class="window-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="side-content">
+          <div>
+            <p class="side-label" data-i18n="status-label">current status</p>
+            <span class="status" data-i18n="status">still here.</span>
+          </div>
+          <hr class="side-divider">
+          <div>
+            <p class="side-label" data-i18n="visitor-label">you are a visitor</p>
+            <p class="side-copy" data-i18n="visitor-copy">you found this page.</p>
+          </div>
+          <hr class="side-divider">
+          <div>
+            <p class="side-label" data-i18n="shortcuts-label">shortcuts</p>
+            <ul class="side-links">
+              <li><a href="#projects" data-i18n="shortcut-projects">/ projects</a></li>
+              <li><a href="#interests" data-i18n="shortcut-interests">/ interests</a></li>
+              <li><a href="#contact" data-i18n="shortcut-contact">/ contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <p class="signature"><span data-i18n="signature">made by Adam</span> <span class="tiny-mark" aria-hidden="true">✳</span></p>
+      <p>$ &nbsp; <span data-i18n="footer-note">no algorithm, just a little corner of the internet</span></p>
+    </footer>
+  </div>
+  <script>
+    const translations = {
+      en: {
+        "eyebrow": "PERSONAL HOMEPAGE",
+        "eyebrow-end": "INTERNET, SOMEWHERE",
+        "top-note": "still here · updated now and then",
+        "window-title": "adam://home — personal space",
+        "micro-label": "[ personal homepage · no. 001 ]",
+        "hero-note": "chill. probably building something.",
+        "nav-label": "Page navigation",
+        "language-en-label": "Switch language to English",
+        "language-es-label": "Switch language to Spanish",
+        "nav-about": "about me",
+        "nav-interests": "interests",
+        "nav-projects": "projects",
+        "nav-setup": "my setup",
+        "nav-contact": "find me",
+        "about-title": "About me",
+        "about-one": "Adam. 13.",
+        "about-two": "Somewhere between software and hardware.",
+        "about-three": "Probably building something.",
+        "interests-title": "Things I’m into",
+        "interests-intro": "A few things I keep coming back to.",
+        "interest-programming": "Programming",
+        "interest-hardware": "Hardware",
+        "interest-ai": "AI",
+        "interest-linux": "Linux",
+        "interest-security": "Cybersecurity",
+        "interest-repair": "Device repair",
+        "interest-technology": "Technology",
+        "interest-business": "Entrepreneurship",
+        "interest-games": "Roblox",
+        "projects-title": "Projects",
+        "projects-intro": "A few things exist.",
+        "project-quotes": "Frases Motivacionales",
+        "project-quotes-description": "A small site for finding a phrase for the day.",
+        "project-quotes-status": "[ still here ]",
+        "project-simulator": "Internet 2000 Simulator",
+        "project-simulator-description": "Somewhere between unfinished and forgotten.",
+        "project-simulator-status": "[ somewhere in development ]",
+        "setup-title": "My setup",
+        "contact-title": "Find me",
+        "contact-intro": "A few places I left open. Discord: nosoyadaam.",
+        "profile-label": "profile",
+        "aside-label": "Small details",
+        "details-title": "small details",
+        "status-label": "current status",
+        "status": "still here.",
+        "visitor-label": "you are a visitor",
+        "visitor-copy": "you found this page.",
+        "shortcuts-label": "shortcuts",
+        "shortcut-projects": "/ projects",
+        "shortcut-interests": "/ interests",
+        "shortcut-contact": "/ contact",
+        "signature": "made by Adam",
+        "footer-note": "no algorithm, just a little corner of the internet",
+        "title": "Adam — personal homepage"
+      },
+      es: {
+        "eyebrow": "HOMEPAGE PERSONAL",
+        "eyebrow-end": "INTERNET, EN ALGÚN LUGAR",
+        "top-note": "sigo aquí · se actualiza de vez en cuando",
+        "window-title": "adam://home — espacio personal",
+        "micro-label": "[ homepage personal · no. 001 ]",
+        "hero-note": "tranqui. probablemente construyendo algo.",
+        "nav-label": "Navegación de la página",
+        "language-en-label": "Cambiar idioma a inglés",
+        "language-es-label": "Cambiar idioma a español",
+        "nav-about": "sobre mí",
+        "nav-interests": "intereses",
+        "nav-projects": "proyectos",
+        "nav-setup": "mi equipo",
+        "nav-contact": "encuéntrame",
+        "about-title": "Sobre mí",
+        "about-one": "Adam. 13.",
+        "about-two": "En algún lugar entre software y hardware.",
+        "about-three": "Probablemente construyendo algo.",
+        "interests-title": "Cosas que me gustan",
+        "interests-intro": "Unas cuantas cosas a las que siempre vuelvo.",
+        "interest-programming": "Programación",
+        "interest-hardware": "Hardware",
+        "interest-ai": "IA",
+        "interest-linux": "Linux",
+        "interest-security": "Ciberseguridad",
+        "interest-repair": "Reparación de dispositivos",
+        "interest-technology": "Tecnología",
+        "interest-business": "Emprendimiento",
+        "interest-games": "Roblox",
+        "projects-title": "Proyectos",
+        "projects-intro": "Existen algunas cosas.",
+        "project-quotes": "Frases Motivacionales",
+        "project-quotes-description": "Una pequeña web para encontrar una frase para el día.",
+        "project-quotes-status": "[ sigue aquí ]",
+        "project-simulator": "Internet 2000 Simulator",
+        "project-simulator-description": "En algún lugar entre sin terminar y olvidado.",
+        "project-simulator-status": "[ en algún lugar del desarrollo ]",
+        "setup-title": "Mi equipo",
+        "contact-title": "Encuéntrame",
+        "contact-intro": "Unos sitios que dejé abiertos. Discord: nosoyadaam.",
+        "profile-label": "perfil",
+        "aside-label": "Pequeños detalles",
+        "details-title": "pequeños detalles",
+        "status-label": "estado actual",
+        "status": "sigo aquí.",
+        "visitor-label": "eres visitante",
+        "visitor-copy": "encontraste esta página.",
+        "shortcuts-label": "atajos",
+        "shortcut-projects": "/ proyectos",
+        "shortcut-interests": "/ intereses",
+        "shortcut-contact": "/ contacto",
+        "signature": "hecho por Adam",
+        "footer-note": "sin algoritmos, solo un pequeño rincón de internet",
+        "title": "Adam — homepage personal"
+      }
+    };
+
+    const languageLinks = document.querySelectorAll("[data-language]");
+
+    function setLanguage(language) {
+      const content = translations[language];
+      if (!content) return;
+
+      document.documentElement.lang = language;
+      document.title = content.title;
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        element.textContent = content[element.dataset.i18n];
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+        element.setAttribute("aria-label", content[element.dataset.i18nAria]);
+      });
+      languageLinks.forEach((link) => {
+        const selected = link.dataset.language === language;
+        link.setAttribute("aria-pressed", String(selected));
+      });
+    }
+
+    languageLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        setLanguage(link.dataset.language);
+      });
+    });
+
+    setLanguage("en");
+  </script>
+</body>
+</html>
